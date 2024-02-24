@@ -1,0 +1,25 @@
+services:
+  postgres:
+    image: postgres:9.6
+    ports:
+      - "5499:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+
+  bigchaindb:
+    image: bigchaindb/bigchaindb:all-in-one
+    network_mode: "host"
+    # volumes:
+      # - ./bigchaindb-data:/data
+      # - ./bigchaindb-tendermint:/tendermint
+
+  moon:
+    build: .
+    network_mode: "host"
+    depends_on:
+      - postgres
+      - bigchaindb

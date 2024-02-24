@@ -1,0 +1,1 @@
+select extract(month from s_date) as s_month, sum(s_unit_profit) as s_profit_sum from customers c, (select c_id, (s_unit_price - s_tax_5_pct) as s_unit_profit, s_date from sales) s where c.c_id = s.c_id and c.c_gender = 'Female' group by s_month order by s_profit_sum desc limit 3;

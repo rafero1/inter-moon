@@ -1,0 +1,1 @@
+select c_type, sum(s_total) from customers c join sales s on c.c_id = s.c_id group by c_type;

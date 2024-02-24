@@ -1,0 +1,129 @@
+{
+    "entities": [
+        {
+            "name": "customers",
+            "attributes": [
+                {
+                    "name": "c_id",
+                    "type": "integer"
+                },
+                {
+                    "name": "c_name",
+                    "type": "varchar"
+                },
+                {
+                    "name": "c_email",
+                    "type": "varchar"
+                },
+                {
+                    "name": "c_gender",
+                    "type": "varchar"
+                },
+                {
+                    "name": "c_phone",
+                    "type": "varchar"
+                },
+                {
+                    "name": "c_birth_date",
+                    "type": "date"
+                },
+                {
+                    "name": "c_type",
+                    "type": "varchar"
+                }
+            ],
+            "persistence": "relational_database",
+            "primary_key": [
+                {
+                    "name": "c_id"
+                }
+            ]
+        },
+        {
+            "name": "sales",
+            "attributes": [
+                {
+                    "name": "s_id",
+                    "type": "integer"
+                },
+                {
+                    "name": "s_invoice_id",
+                    "type": "varchar"
+                },
+                {
+                    "name": "s_branch",
+                    "type": "varchar"
+                },
+                {
+                    "name": "s_city",
+                    "type": "varchar"
+                },
+                {
+                    "name": "s_product_line",
+                    "type": "varchar"
+                },
+                {
+                    "name": "s_unit_price",
+                    "type": "decimal"
+                },
+                {
+                    "name": "s_quantity",
+                    "type": "integer"
+                },
+                {
+                    "name": "s_tax_5_pct",
+                    "type": "decimal"
+                },
+                {
+                    "name": "s_total",
+                    "type": "decimal"
+                },
+                {
+                    "name": "s_date",
+                    "type": "date"
+                },
+                {
+                    "name": "s_time",
+                    "type": "varchar"
+                },
+                {
+                    "name": "s_payment",
+                    "type": "varchar"
+                },
+                {
+                    "name": "s_cogs",
+                    "type": "decimal"
+                },
+                {
+                    "name": "s_gross_margin_percentage",
+                    "type": "decimal"
+                },
+                {
+                    "name": "s_gross_income",
+                    "type": "decimal"
+                },
+                {
+                    "name": "s_rating",
+                    "type": "decimal"
+                },
+                {
+                    "name": "c_id",
+                    "type": "integer"
+                }
+            ],
+            "persistence": "blockchain",
+            "primary_key": [
+                {
+                    "name": "s_id"
+                }
+            ],
+            "foreign_key": [
+                {
+                    "name": "c_id",
+                    "ext_ref_name": "customers",
+                    "fields": "c_id"
+                }
+            ]
+        }
+    ]
+}
