@@ -1,0 +1,37 @@
+{
+  "entities": [
+    {
+      "name":"CONTESTANTS",
+      "attributes":[
+        {"name":"contestant_number", "type":"integer"},
+        {"name":"contestant_name", "type":"varchar"}
+      ],
+      "persistence" :"relational_database",
+      "primary_key" :[{"name":"contestant_number"}]
+    },
+    {
+      "name":"AREA_CODE_STATE",
+      "attributes":[
+        {"name":"area_code", "type":"integer"},
+        {"name":"state", "type":"varchar"}
+      ],
+      "persistence" :"relational_database",
+      "primary_key" :[{"name":"area_code"}]
+    },
+    {
+      "name":"VOTES",
+      "attributes":[
+        {"name":"vote_id", "type":"integer"},
+        {"name":"phone_number", "type":"varchar"},
+        {"name":"state", "type":"varchar"},
+        {"name":"contestant_number", "type":"integer"},
+        {"name":"created", "type":"varchar"}
+      ],
+      "persistence" :"blockchain",
+      "primary_key" :[{"name":"vote_id"}],
+      "foreign_key" :[
+        {"name":"contestant_number", "ext_ref_name":"CONTESTANTS", "fields":"contestant_number"}
+      ]
+    }
+  ]
+}

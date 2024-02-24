@@ -1,7 +1,6 @@
-import os
-from dotenv import load_dotenv
-from communication.communication import Communication
+from moon.communication.communication import Communication
 
-load_dotenv()
+HOST = '0.0.0.0'
+PORT = 9654
 
-comm = Communication(os.environ['MOON_HOST'], int(os.environ['MOON_PORT']))
+comm = Communication(HOST, PORT)

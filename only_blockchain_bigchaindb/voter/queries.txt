@@ -1,0 +1,494 @@
+INSERT INTO CONTESTANTS (contestant_number, contestant_name) VALUES ('1', 'EdwinaBurnam')
+INSERT INTO CONTESTANTS (contestant_number, contestant_name) VALUES ('2', 'TabathaGehling')
+INSERT INTO CONTESTANTS (contestant_number, contestant_name) VALUES ('3', 'KellyClauss')
+INSERT INTO CONTESTANTS (contestant_number, contestant_name) VALUES ('4', 'JessieAlloway')
+INSERT INTO CONTESTANTS (contestant_number, contestant_name) VALUES ('5', 'AlanaBregman')
+INSERT INTO CONTESTANTS (contestant_number, contestant_name) VALUES ('6', 'JessieEichman')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('907', 'AK')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('205', 'AL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('256', 'AL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('334', 'AL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('251', 'AL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('870', 'AR')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('501', 'AR')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('479', 'AR')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('480', 'AZ')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('602', 'AZ')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('623', 'AZ')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('928', 'AZ')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('520', 'AZ')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('341', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('764', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('628', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('831', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('925', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('909', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('562', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('661', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('510', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('650', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('949', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('760', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('415', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('951', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('209', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('669', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('408', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('559', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('626', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('442', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('530', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('916', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('627', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('714', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('707', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('310', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('323', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('213', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('424', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('747', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('818', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('858', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('935', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('619', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('805', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('369', 'CA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('720', 'CO')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('303', 'CO')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('970', 'CO')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('719', 'CO')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('860', 'CT')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('203', 'CT')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('959', 'CT')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('475', 'CT')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('202', 'DC')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('302', 'DE')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('689', 'FL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('407', 'FL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('239', 'FL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('850', 'FL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('727', 'FL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('321', 'FL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('754', 'FL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('954', 'FL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('927', 'FL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('352', 'FL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('863', 'FL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('386', 'FL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('904', 'FL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('561', 'FL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('772', 'FL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('786', 'FL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('305', 'FL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('941', 'FL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('813', 'FL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('478', 'GA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('770', 'GA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('470', 'GA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('404', 'GA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('762', 'GA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('706', 'GA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('678', 'GA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('912', 'GA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('229', 'GA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('808', 'HI')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('515', 'IA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('319', 'IA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('563', 'IA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('641', 'IA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('712', 'IA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('208', 'ID')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('217', 'IL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('872', 'IL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('312', 'IL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('773', 'IL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('464', 'IL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('708', 'IL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('224', 'IL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('847', 'IL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('779', 'IL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('815', 'IL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('618', 'IL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('309', 'IL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('331', 'IL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('630', 'IL')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('317', 'IN')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('765', 'IN')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('574', 'IN')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('260', 'IN')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('219', 'IN')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('812', 'IN')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('913', 'KS')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('785', 'KS')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('316', 'KS')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('620', 'KS')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('606', 'KY')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('859', 'KY')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('502', 'KY')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('270', 'KY')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('504', 'LA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('985', 'LA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('225', 'LA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('318', 'LA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('337', 'LA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('774', 'MA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('508', 'MA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('339', 'MA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('781', 'MA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('857', 'MA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('617', 'MA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('978', 'MA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('351', 'MA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('413', 'MA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('443', 'MD')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('410', 'MD')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('301', 'MD')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('240', 'MD')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('207', 'ME')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('517', 'MI')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('810', 'MI')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('278', 'MI')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('679', 'MI')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('313', 'MI')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('586', 'MI')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('947', 'MI')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('248', 'MI')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('734', 'MI')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('269', 'MI')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('989', 'MI')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('906', 'MI')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('616', 'MI')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('231', 'MI')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('612', 'MN')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('320', 'MN')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('651', 'MN')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('763', 'MN')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('952', 'MN')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('218', 'MN')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('507', 'MN')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('636', 'MO')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('660', 'MO')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('975', 'MO')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('816', 'MO')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('573', 'MO')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('314', 'MO')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('557', 'MO')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('417', 'MO')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('769', 'MS')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('601', 'MS')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('662', 'MS')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('228', 'MS')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('406', 'MT')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('336', 'NC')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('252', 'NC')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('984', 'NC')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('919', 'NC')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('980', 'NC')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('910', 'NC')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('828', 'NC')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('704', 'NC')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('701', 'ND')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('402', 'NE')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('308', 'NE')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('603', 'NH')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('908', 'NJ')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('848', 'NJ')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('732', 'NJ')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('551', 'NJ')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('201', 'NJ')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('862', 'NJ')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('973', 'NJ')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('609', 'NJ')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('856', 'NJ')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('575', 'NM')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('957', 'NM')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('505', 'NM')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('775', 'NV')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('702', 'NV')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('315', 'NY')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('518', 'NY')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('646', 'NY')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('347', 'NY')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('212', 'NY')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('718', 'NY')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('516', 'NY')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('917', 'NY')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('845', 'NY')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('631', 'NY')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('716', 'NY')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('585', 'NY')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('607', 'NY')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('914', 'NY')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('216', 'OH')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('330', 'OH')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('234', 'OH')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('567', 'OH')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('419', 'OH')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('440', 'OH')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('380', 'OH')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('740', 'OH')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('614', 'OH')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('283', 'OH')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('513', 'OH')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('937', 'OH')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('918', 'OK')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('580', 'OK')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('405', 'OK')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('503', 'OR')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('541', 'OR')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('971', 'OR')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('814', 'PA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('717', 'PA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('570', 'PA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('878', 'PA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('835', 'PA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('484', 'PA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('610', 'PA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('267', 'PA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('215', 'PA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('724', 'PA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('412', 'PA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('401', 'RI')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('843', 'SC')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('864', 'SC')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('803', 'SC')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('605', 'SD')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('423', 'TN')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('865', 'TN')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('931', 'TN')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('615', 'TN')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('901', 'TN')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('731', 'TN')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('254', 'TX')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('325', 'TX')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('713', 'TX')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('940', 'TX')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('817', 'TX')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('430', 'TX')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('903', 'TX')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('806', 'TX')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('737', 'TX')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('512', 'TX')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('361', 'TX')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('210', 'TX')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('979', 'TX')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('936', 'TX')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('409', 'TX')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('972', 'TX')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('469', 'TX')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('214', 'TX')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('682', 'TX')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('832', 'TX')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('281', 'TX')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('830', 'TX')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('956', 'TX')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('432', 'TX')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('915', 'TX')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('435', 'UT')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('801', 'UT')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('385', 'UT')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('434', 'VA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('804', 'VA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('757', 'VA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('703', 'VA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('571', 'VA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('276', 'VA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('236', 'VA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('540', 'VA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('802', 'VT')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('509', 'WA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('360', 'WA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('564', 'WA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('206', 'WA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('425', 'WA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('253', 'WA')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('715', 'WI')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('920', 'WI')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('262', 'WI')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('414', 'WI')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('608', 'WI')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('304', 'WV')
+INSERT INTO AREA_CODE_STATE (area_code, state) VALUES ('307', 'WY')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('0', '2022627101', 'DC', '1', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('1', '5856524663', 'NY', '6', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('2', '2010737314', 'NJ', '3', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('3', '7184417710', 'NY', '1', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('4', '9123161472', 'GA', '2', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('5', '8040470233', 'VA', '6', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('6', '6154397103', 'TN', '3', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('7', '4255673187', 'WA', '4', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('8', '9154447401', 'TX', '4', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('9', '2055113291', 'AL', '1', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('10', '2175465449', 'IL', '3', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('11', '4346073655', 'VA', '2', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('13', '2624613745', 'WI', '2', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('14', '7375674534', 'TX', '1', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('15', '7032520986', 'VA', '4', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('16', '3378929342', 'LA', '1', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('17', '9577778646', 'NM', '2', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('18', '9371487047', 'OH', '2', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('19', '9498694263', 'CA', '1', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('20', '7607020621', 'CA', '6', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('21', '9126206911', 'GA', '1', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('22', '9011722638', 'TN', '6', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('23', '6463477752', 'NY', '5', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('24', '7470704153', 'CA', '4', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('25', '6189823386', 'IL', '2', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('26', '7702616725', 'GA', '1', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('27', '2810775597', 'TX', '3', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('28', '7738235987', 'IL', '3', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('29', '7315461300', 'TN', '1', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('30', '9473634669', 'MI', '5', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('31', '3105791711', 'CA', '2', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('32', '7869256253', 'FL', '6', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('33', '4355978100', 'UT', '3', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('34', '9098390417', 'CA', '4', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('35', '4796990337', 'AR', '4', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('36', '7753737497', 'NV', '1', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('37', '4042095349', 'GA', '4', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('38', '5869827635', 'MI', '6', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('39', '2761338606', 'VA', '1', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('40', '6067498237', 'KY', '4', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('41', '3319779957', 'IL', '5', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('42', '5800908290', 'OK', '1', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('43', '5712819096', 'VA', '1', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('44', '3311137936', 'IL', '4', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('45', '6158405358', 'TN', '1', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('46', '4309295932', 'TX', '5', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('47', '8028697205', 'VT', '4', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('48', '8596364182', 'KY', '4', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('49', '8593105471', 'KY', '1', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('50', '9314055101', 'TN', '6', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('51', '7026515891', 'NV', '6', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('52', '7061488977', 'GA', '2', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('53', '6286584966', 'CA', '1', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('54', '4071159912', 'FL', '1', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('55', '2287294101', 'MS', '3', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('56', '3310132038', 'IL', '5', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('57', '9107558909', 'NC', '5', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('58', '5041738778', 'LA', '3', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('59', '4126683998', 'PA', '2', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('60', '7326073029', 'NJ', '4', '2020-02-02')
+INSERT INTO VOTES (vote_id, phone_number, state, contestant_number, created) VALUES ('61', '7795888503', 'IL', '1', '2020-02-02')
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '202'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '585'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '201'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '718'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '912'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '804'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '615'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '425'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '915'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '205'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '217'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '434'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '262'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '737'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '703'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '337'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '957'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '937'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '949'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '760'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '912'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '901'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '646'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '747'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '618'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '770'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '281'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '773'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '731'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '947'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '310'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '786'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '435'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '909'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '479'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '775'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '404'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '586'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '276'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '606'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '331'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '580'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '571'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '331'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '615'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '430'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '802'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '859'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '859'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '931'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '702'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '706'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '628'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '407'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '228'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '331'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '910'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '504'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '412'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '732'
+SELECT state FROM AREA_CODE_STATE WHERE area_code = '779'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '2022627101'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '5856524663'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '2010737314'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '7184417710'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '9123161472'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '8040470233'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '6154397103'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '4255673187'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '9154447401'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '2055113291'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '2175465449'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '4346073655'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '2624613745'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '7375674534'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '7032520986'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '3378929342'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '9577778646'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '9371487047'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '9498694263'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '7607020621'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '9126206911'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '9011722638'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '6463477752'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '7470704153'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '6189823386'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '7702616725'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '2810775597'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '7738235987'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '7315461300'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '9473634669'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '3105791711'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '7869256253'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '4355978100'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '9098390417'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '4796990337'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '7753737497'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '4042095349'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '5869827635'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '2761338606'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '6067498237'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '3319779957'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '5800908290'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '5712819096'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '3311137936'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '6158405358'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '4309295932'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '8028697205'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '8596364182'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '8593105471'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '9314055101'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '7026515891'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '7061488977'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '6286584966'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '4071159912'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '2287294101'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '3310132038'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '9107558909'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '5041738778'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '4126683998'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '7326073029'
+SELECT COUNT(*) FROM VOTES WHERE phone_number = '7795888503'

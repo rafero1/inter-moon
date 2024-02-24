@@ -1,0 +1,14 @@
+CLIENT:
+- Check queries file
+- Check database name
+- Check address to send requests
+
+SERVER:
+- Check the catalog file
+
+DATABASE:
+- Execute the ddl file on database CLI
+
+BLOCKCHAIN:
+- Reset tendermint
+- Drop bigchain

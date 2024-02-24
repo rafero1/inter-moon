@@ -1,0 +1,10 @@
+{
+    "db_user": "postgres",
+    "db_name": "twitter",
+    "db_password": "ufc123", 
+    "db_port": 5432,
+    "bc_port": 9984,
+    "hosts": ["localhost"],
+    "bc_public_key": "",
+    "bc_private_key": ""
+}
