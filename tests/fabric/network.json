@@ -23,8 +23,8 @@
       ],
       "users": {
         "Admin": {
-          "cert": "test/fixtures/e2e_cli/crypto-config/ordererOrganizations/example.com/users/Admin@example.com/msp/signcerts/Admin@example.com-cert.pem",
-          "private_key": "test/fixtures/e2e_cli/crypto-config/ordererOrganizations/example.com/users/Admin@example.com/msp/keystore/630e3767a6e1d3c8e646460123d397455103a900efb4d6fb679a9d9c481841fc_sk"
+          "cert": "/home/rafael/repos/inter-moon/tests/fabric/crypto-config/ordererOrganizations/example.com/users/Admin@example.com/msp/signcerts/Admin@example.com-cert.pem",
+          "private_key": "/home/rafael/repos/inter-moon/tests/fabric/crypto-config/ordererOrganizations/example.com/users/Admin@example.com/msp/keystore/630e3767a6e1d3c8e646460123d397455103a900efb4d6fb679a9d9c481841fc_sk"
         }
       }
     },
@@ -39,12 +39,12 @@
       ],
       "users": {
         "Admin": {
-          "cert": "test/fixtures/e2e_cli/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem",
-          "private_key": "test/fixtures/e2e_cli/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/c76527489d5820bd04da80a84c07033ca574413f80614091e04f05c276fb6896_sk"
+          "cert": "/home/rafael/repos/inter-moon/tests/fabric/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem",
+          "private_key": "/home/rafael/repos/inter-moon/tests/fabric/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/c76527489d5820bd04da80a84c07033ca574413f80614091e04f05c276fb6896_sk"
         },
         "User1": {
-          "cert": "test/fixtures/e2e_cli/crypto-config/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/signcerts/User1@org1.example.com-cert.pem",
-          "private_key": "test/fixtures/e2e_cli/crypto-config/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore/da72fd6c0f4595d33eb9ae6f6d06cd171ebc3882fc856960c244b9b5c2b35a90_sk"
+          "cert": "/home/rafael/repos/inter-moon/tests/fabric/crypto-config/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/signcerts/User1@org1.example.com-cert.pem",
+          "private_key": "/home/rafael/repos/inter-moon/tests/fabric/crypto-config/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore/da72fd6c0f4595d33eb9ae6f6d06cd171ebc3882fc856960c244b9b5c2b35a90_sk"
         }
       }
     },
@@ -59,12 +59,18 @@
       ],
       "users": {
         "Admin": {
-          "cert": "test/fixtures/e2e_cli/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/signcerts/Admin@org2.example.com-cert.pem",
-          "private_key": {"pem": "LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JR0hBZ0VBTUJNR0J5cUdTTTQ5QWdFR0NDcUdTTTQ5QXdFSEJHMHdhd0lCQVFRZ1ZkOVJLeGhuMWNlQ0xrWXoKOUJxdWlCM2d2MkZPazQvVU9SRnlUQS9QUnU2aFJBTkNBQVRLU25ySnpRSkUrcDhVRzBwbFRKeElOUnpJNzg0VQo3aHZsOWhjYzJlcE9jUFI5MVo5M0FGVGRFaDBpeXVFQ0JSRmdjWVovOG1PWmFrWDVLUHFGMzdKUwotLS0tLUVORCBQUklWQVRFIEtFWS0tLS0tCg=="}
+          "cert": "/home/rafael/repos/inter-moon/tests/fabric/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/signcerts/Admin@org2.example.com-cert.pem",
+          "private_key": {
+            "pem": "LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JR0hBZ0VBTUJNR0J5cUdTTTQ5QWdFR0NDcUdTTTQ5QXdFSEJHMHdhd0lCQVFRZ1ZkOVJLeGhuMWNlQ0xrWXoKOUJxdWlCM2d2MkZPazQvVU9SRnlUQS9QUnU2aFJBTkNBQVRLU25ySnpRSkUrcDhVRzBwbFRKeElOUnpJNzg0VQo3aHZsOWhjYzJlcE9jUFI5MVo5M0FGVGRFaDBpeXVFQ0JSRmdjWVovOG1PWmFrWDVLUHFGMzdKUwotLS0tLUVORCBQUklWQVRFIEtFWS0tLS0tCg=="
+          }
         },
         "User1": {
-          "cert": {"pem": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNLakNDQWRDZ0F3SUJBZ0lRWmxaZXI5T1ZvL2I0UWlpNDVzVWZFekFLQmdncWhrak9QUVFEQWpCek1Rc3cKQ1FZRFZRUUdFd0pWVXpFVE1CRUdBMVVFQ0JNS1EyRnNhV1p2Y201cFlURVdNQlFHQTFVRUJ4TU5VMkZ1SUVaeQpZVzVqYVhOamJ6RVpNQmNHQTFVRUNoTVFiM0puTWk1bGVHRnRjR3hsTG1OdmJURWNNQm9HQTFVRUF4TVRZMkV1CmIzSm5NaTVsZUdGdGNHeGxMbU52YlRBZUZ3MHhPREV3TVRrd016UTRNREJhRncweU9ERXdNVFl3TXpRNE1EQmEKTUd3eEN6QUpCZ05WQkFZVEFsVlRNUk13RVFZRFZRUUlFd3BEWVd4cFptOXlibWxoTVJZd0ZBWURWUVFIRXcxVApZVzRnUm5KaGJtTnBjMk52TVE4d0RRWURWUVFMRXdaamJHbGxiblF4SHpBZEJnTlZCQU1NRmxWelpYSXhRRzl5Clp6SXVaWGhoYlhCc1pTNWpiMjB3V1RBVEJnY3Foa2pPUFFJQkJnZ3Foa2pPUFFNQkJ3TkNBQVNhSkc4eHpkSncKREdvWENxb3VVWllIQ1c1NlNlM3NVOU9WaitOU0daeGV0Zm1tLythS0RxSU1FZCtiRFBWbjBIWnNaWUMvc1lXTApmd0lrdkk5VjIvNE5vMDB3U3pBT0JnTlZIUThCQWY4RUJBTUNCNEF3REFZRFZSMFRBUUgvQkFJd0FEQXJCZ05WCkhTTUVKREFpZ0NEdTJvY05LSkRWMkhtdFhuTFJRNXBzczViNk9XNE9DWXdJNkhOTStoRTVqREFLQmdncWhrak8KUFFRREFnTklBREJGQWlFQTJXc20wTW1RbVZwVU1DcitEeGtlbWhvMjZMa1FsNmtKYVBVbkdmaGNCbmNDSUN1aQpmbTZXcnBEL0xrODBaNFZPRGFBTGZxOVd0MVpPeEx4M1pXaDl1RUtLCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K" },
-          "private_key": {"path": "test/fixtures/e2e_cli/crypto-config/peerOrganizations/org2.example.com/users/User1@org2.example.com/msp/keystore/73beefad9003c589064deb2128c4f0831ba8003f1233102cc52a188afd05fe61_sk"}
+          "cert": {
+            "pem": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNLakNDQWRDZ0F3SUJBZ0lRWmxaZXI5T1ZvL2I0UWlpNDVzVWZFekFLQmdncWhrak9QUVFEQWpCek1Rc3cKQ1FZRFZRUUdFd0pWVXpFVE1CRUdBMVVFQ0JNS1EyRnNhV1p2Y201cFlURVdNQlFHQTFVRUJ4TU5VMkZ1SUVaeQpZVzVqYVhOamJ6RVpNQmNHQTFVRUNoTVFiM0puTWk1bGVHRnRjR3hsTG1OdmJURWNNQm9HQTFVRUF4TVRZMkV1CmIzSm5NaTVsZUdGdGNHeGxMbU52YlRBZUZ3MHhPREV3TVRrd016UTRNREJhRncweU9ERXdNVFl3TXpRNE1EQmEKTUd3eEN6QUpCZ05WQkFZVEFsVlRNUk13RVFZRFZRUUlFd3BEWVd4cFptOXlibWxoTVJZd0ZBWURWUVFIRXcxVApZVzRnUm5KaGJtTnBjMk52TVE4d0RRWURWUVFMRXdaamJHbGxiblF4SHpBZEJnTlZCQU1NRmxWelpYSXhRRzl5Clp6SXVaWGhoYlhCc1pTNWpiMjB3V1RBVEJnY3Foa2pPUFFJQkJnZ3Foa2pPUFFNQkJ3TkNBQVNhSkc4eHpkSncKREdvWENxb3VVWllIQ1c1NlNlM3NVOU9WaitOU0daeGV0Zm1tLythS0RxSU1FZCtiRFBWbjBIWnNaWUMvc1lXTApmd0lrdkk5VjIvNE5vMDB3U3pBT0JnTlZIUThCQWY4RUJBTUNCNEF3REFZRFZSMFRBUUgvQkFJd0FEQXJCZ05WCkhTTUVKREFpZ0NEdTJvY05LSkRWMkhtdFhuTFJRNXBzczViNk9XNE9DWXdJNkhOTStoRTVqREFLQmdncWhrak8KUFFRREFnTklBREJGQWlFQTJXc20wTW1RbVZwVU1DcitEeGtlbWhvMjZMa1FsNmtKYVBVbkdmaGNCbmNDSUN1aQpmbTZXcnBEL0xrODBaNFZPRGFBTGZxOVd0MVpPeEx4M1pXaDl1RUtLCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K"
+          },
+          "private_key": {
+            "path": "/home/rafael/repos/inter-moon/tests/fabric/crypto-config/peerOrganizations/org2.example.com/users/User1@org2.example.com/msp/keystore/73beefad9003c589064deb2128c4f0831ba8003f1233102cc52a188afd05fe61_sk"
+          }
         }
       }
     }
@@ -77,7 +83,7 @@
         "grpc-max-send-message-length": 15
       },
       "tlsCACerts": {
-        "path": "test/fixtures/e2e_cli/crypto-config/ordererOrganizations/example.com/tlsca/tlsca.example.com-cert.pem"
+        "path": "/home/rafael/repos/inter-moon/tests/fabric/crypto-config/ordererOrganizations/example.com/tlsca/tlsca.example.com-cert.pem"
       }
     }
   },
@@ -90,7 +96,7 @@
         "grpc.http2.keepalive_time": 15
       },
       "tlsCACerts": {
-        "path": "test/fixtures/e2e_cli/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp/tlscacerts/tlsca.org1.example.com-cert.pem"
+        "path": "/home/rafael/repos/inter-moon/tests/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp/tlscacerts/tlsca.org1.example.com-cert.pem"
       }
     },
     "peer1.org1.example.com": {
@@ -100,7 +106,7 @@
         "grpc.ssl_target_name_override": "peer1.org1.example.com"
       },
       "tlsCACerts": {
-        "path": "test/fixtures/e2e_cli/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/msp/tlscacerts/tlsca.org1.example.com-cert.pem"
+        "path": "/home/rafael/repos/inter-moon/tests/fabric/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/msp/tlscacerts/tlsca.org1.example.com-cert.pem"
       }
     },
     "peer0.org2.example.com": {
@@ -111,7 +117,7 @@
         "grpc.http2.keepalive_time": 15
       },
       "tlsCACerts": {
-        "path": "test/fixtures/e2e_cli/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/msp/tlscacerts/tlsca.org2.example.com-cert.pem"
+        "path": "/home/rafael/repos/inter-moon/tests/fabric/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/msp/tlscacerts/tlsca.org2.example.com-cert.pem"
       }
     },
     "peer1.org2.example.com": {
@@ -121,7 +127,7 @@
         "grpc.ssl_target_name_override": "peer1.org2.example.com"
       },
       "tlsCACerts": {
-        "path": "test/fixtures/e2e_cli/crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/msp/tlscacerts/tlsca.org2.example.com-cert.pem"
+        "path": "/home/rafael/repos/inter-moon/tests/fabric/crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/msp/tlscacerts/tlsca.org2.example.com-cert.pem"
       }
     }
   },
@@ -132,7 +138,7 @@
         "verify": true
       },
       "tlsCACerts": {
-        "path": "test/fixtures/e2e_cli/crypto-config/peerOrganizations/org1.example.com/ca/org1.example.com-cert.pem"
+        "path": "/home/rafael/repos/inter-moon/tests/fabric/crypto-config/peerOrganizations/org1.example.com/ca/org1.example.com-cert.pem"
       },
       "registrar": [
         {
@@ -147,7 +153,7 @@
         "verify": true
       },
       "tlsCACerts": {
-        "path": "test/fixtures/e2e_cli/crypto-config/peerOrganizations/org2.example.com/ca/org2.example.com-cert.pem"
+        "path": "/home/rafael/repos/inter-moon/tests/fabric/crypto-config/peerOrganizations/org2.example.com/ca/org2.example.com-cert.pem"
       },
       "registrar": [
         {
