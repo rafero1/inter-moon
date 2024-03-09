@@ -7,6 +7,7 @@ from mapper.column import DEFAULT_ENTITY, DEFAULT_HASH, DEFAULT_OMITTED_COLUMNS,
 from mapper.converters import to_bool, to_float, to_integer, to_varchar
 from mapper.schema_manager import SchemaManager
 from timeit import default_timer as timer
+from concurrent.futures import ProcessPoolExecutor
 
 from helpers.floats import s_to_ms
 
@@ -28,7 +29,7 @@ class Mapper:
             entity,
             hashes_to_delete
         )
-        print("> prepared stmt:", ellipsize(sql_stmt))
+        print("prepared stmt:", ellipsize(sql_stmt))
         return sql_stmt
 
     @staticmethod
@@ -85,35 +86,7 @@ class Mapper:
         return f'CREATE TEMP TABLE {table_name} ({cols})'
 
     @staticmethod
-    def generate_sql_insert_values(asset: dict, columns: ColumnList) -> str:
-        """
-        Generates a list of properly formatted values (x) from a blockchain asset
-        to be utilized in a SQL INSERT INTO table (columns) VALUES (x) query,
-        based on the given list of columns.
-
-        Only the properties corresponding to the given list of columns will pe pulled from the asset.
-
-        :param asset dict: The blockchain asset whose properties will be turned into SQL values.
-        :param columns ColumnList: The list of columns the query asks for.
-        :return: A formatted list of values in string format.
-
-        Example:
-        >>> asset = {
-            "name": "Michael",
-            "age": 26,
-            "job": None
-        }
-
-        Will be returned as:
-
-        >>> "('Michael', 26, NULL)".
-        """
-        attrs = Mapper.get_attributes_from_asset(asset, columns)
-        values = Mapper.get_value_list_from_attributes(attrs)
-        return f"({','.join(values)})"
-
-    @staticmethod
-    def generate_sql_insert_into_temp_table_from_bc_data(table_name: str, columns: ColumnList, bc_data: typing.List[dict], with_hash: bool = False):
+    def generate_sql_insert_into_temp_table_from_bc_data(table_name: str, columns: ColumnList, assets: list[dict], with_hash: bool = False):
         """
         Generates an SQL query to insert blockchain tx data into a given table.
 
@@ -125,8 +98,7 @@ class Mapper:
         :return: SQL to insert into a temp table
         """
 
-        # bc_data must not be empty
-        if not bc_data:
+        if not assets:
             return None
 
         # generate the column definiton for each attribute
@@ -137,15 +109,22 @@ class Mapper:
             columns.append(Column(DEFAULT_HASH, SQLColumnType.VARCHAR))
 
         # start = timer()
-        # values_list = [Mapper.generate_sql_insert_values(asset, columns) for asset in bc_data]
 
         values_list = (
-            "(" + ",".join([
-                attr.get_insert_value() for attr in [Attribute(col, bc_asset['data'].get(col.name, None)) for col in columns]
-            ]) + ")" for bc_asset in bc_data)
+            "(" + ",".join(
+                attr.get_insert_value() for attr in (Attribute(col, asset.get(col.name, None)) for col in columns)
+        ) + ")" for asset in assets)
+
+        # def process_asset(asset):
+        #     return "(" + ",".join(
+        #         attr.get_insert_value() for attr in (Attribute(col, asset.get(col.name, None)) for col in columns)
+        #     ) + ")"
+
+        # with ProcessPoolExecutor() as executor:
+        #     values_list = list(executor.map(process_asset, assets))
 
         # end = timer()
-        # print(">> finished generating values in", s_to_ms(end-start, 5), "ms")
+        # print("finished generating values in", s_to_ms(end-start, 5), "ms")
         rs = f"INSERT INTO {table_name} ({cols}) VALUES {','.join(values_list)}"
 
         return rs

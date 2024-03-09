@@ -1,6 +1,7 @@
-package moon
+package main
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
@@ -15,18 +16,9 @@ type SimpleAsset struct {
 // data. Note that chaincode upgrade also calls this function to reset
 // or to migrate data.
 func (t *SimpleAsset) Init(stub shim.ChaincodeStubInterface) pb.Response {
-	// Get the args from the transaction proposal
-	args := stub.GetStringArgs()
-	if len(args) != 2 {
-		return shim.Error("incorrect arguments. Expecting a key and a value")
-	}
-
-	// Set up any variables or assets here by calling stub.PutState()
-
-	// We store the key and the value on the ledger
-	err := stub.PutState(args[0], []byte(args[1]))
+	value, err := set(stub, []string{"key1", "{\"value\":\"initial value\"}"})
 	if err != nil {
-		return shim.Error(fmt.Sprintf("failed to create asset: %s", args[0]))
+		return shim.Error(fmt.Sprintf("failed to create asset: %s", value))
 	}
 	return shim.Success(nil)
 }
@@ -36,18 +28,19 @@ func (t *SimpleAsset) Init(stub shim.ChaincodeStubInterface) pb.Response {
 // method may create a new asset by specifying a new key-value pair.
 func (t *SimpleAsset) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	// Extract the function and args from the transaction proposal
-	fn, args := stub.GetFunctionAndParameters()
+	_, args := stub.GetFunctionAndParameters()
 
 	var result string
 	var err error
-	if fn == "set" {
-		result, err = set(stub, args)
-	} else if fn == "get" {
-		result, err = get(stub, args)
-	} else if fn == "getList" {
-		result, err = getList(stub, args)
+
+	if args[0] == "set" {
+		result, err = set(stub, args[1:])
+	} else if args[0] == "get" {
+		result, err = get(stub, args[1:])
+	} else if args[0] == "getList" {
+		result, err = getList(stub, args[1:])
 	} else {
-		return shim.Error("invalid function name. Expecting 'set' or 'get' or 'getList'")
+		return shim.Error("invalid function name. Expecting 'set' or 'get' or 'getList', got: " + args[0])
 	}
 	if err != nil {
 		return shim.Error(err.Error())
@@ -61,10 +54,20 @@ func (t *SimpleAsset) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 // it will override the value with the new one
 func set(stub shim.ChaincodeStubInterface, args []string) (string, error) {
 	if len(args) != 2 {
-		return "", fmt.Errorf("incorrect arguments. Expecting a key and a value")
+		return "", fmt.Errorf("incorrect arguments. Expecting a key and a value. Got: %v", args)
 	}
 
-	err := stub.PutState(args[0], []byte(args[1]))
+	var err error
+
+	// Unmarshal the value to check if it is a valid JSON
+	var js map[string]interface{}
+	err = json.Unmarshal([]byte(args[1]), &js)
+	if err != nil {
+		return "", fmt.Errorf("failed to unmarshal asset: %s", args[0])
+	}
+
+	// Write the state to the ledger
+	err = stub.PutState(args[0], []byte(args[1]))
 	if err != nil {
 		return "", fmt.Errorf("failed to set asset: %s", args[0])
 	}
@@ -74,7 +77,7 @@ func set(stub shim.ChaincodeStubInterface, args []string) (string, error) {
 // Get returns the value of the specified asset key
 func get(stub shim.ChaincodeStubInterface, args []string) (string, error) {
 	if len(args) != 1 {
-		return "", fmt.Errorf("incorrect arguments. Expecting a key")
+		return "", fmt.Errorf("incorrect arguments. Expecting a key. Got: %v", args)
 	}
 
 	value, err := stub.GetState(args[0])
@@ -84,13 +87,16 @@ func get(stub shim.ChaincodeStubInterface, args []string) (string, error) {
 	if value == nil {
 		return "", fmt.Errorf("asset not found: %s", args[0])
 	}
-	return string(value), nil
+
+	var result = string(value)
+
+	return result, nil
 }
 
 // Get returns a list of values of the specified asset keys
 func getList(stub shim.ChaincodeStubInterface, args []string) (string, error) {
 	if len(args) < 1 {
-		return "", fmt.Errorf("incorrect arguments. Expecting a list of keys")
+		return "", fmt.Errorf("incorrect arguments. Expecting a list of keys. Got: %v", args)
 	}
 
 	var result string
@@ -102,8 +108,20 @@ func getList(stub shim.ChaincodeStubInterface, args []string) (string, error) {
 		if value == nil {
 			return "", fmt.Errorf("asset not found: %s", args[i])
 		}
-		result += string(value) + ","
+
+		result += string(value)
+
+		// If it's not the last element, add a comma
+		if i < len(args)-1 {
+			result += ","
+		}
 	}
+
+	// enclose result in square brackets
+	if len(args) > 1 {
+		result = "[" + result + "]"
+	}
+
 	return result, nil
 }
 

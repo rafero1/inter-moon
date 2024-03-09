@@ -40,7 +40,7 @@ class DataTempManager:
             # start = timer()
             columns = Mapper.get_columns_from_assets(entity_name, bc_data[i])
             # end = timer()
-            # print(">> finished getting columns in", s_to_ms(end-start, 5), "ms")
+            # print("finished getting columns in", s_to_ms(end-start, 5), "ms")
 
             # generate CREATE TEMP TABLE statements
             # start = timer()
@@ -50,8 +50,8 @@ class DataTempManager:
                 creates.append(stmt)
             # end = timer()
 
-            # print("> prepared stmt:", ellipsize(stmt, 50))
-            # print(">> finished preparing creates in", s_to_ms(end-start, 5), "ms")
+            # print("prepared stmt:", ellipsize(stmt, 50))
+            # print("finished preparing creates in", s_to_ms(end-start, 5), "ms")
 
             # generate INSERT INTO TABLE statements
             # TODO: optimize this
@@ -67,8 +67,8 @@ class DataTempManager:
                     inserts.append(stmt)
             # end = timer()
 
-            # print("> prepared stmt:", ellipsize(str(stmt), 50))
-            # print('>> finished preparing inserts in',
+            # print("prepared stmt:", ellipsize(str(stmt), 50))
+            # print('finished preparing inserts in',
             #     s_to_ms(end-start, 5), 'ms')
 
 
@@ -92,21 +92,21 @@ class DataTempManager:
             for create in creates:
                 cursor.execute(create)
             # end = timer()
-            # print('>> finished executing creates in',
+            # print('finished executing creates in',
             #       s_to_ms(end-start, 5), 'ms')
 
             start = timer()
             for insert in inserts:
                 cursor.execute(insert)
             end = timer()
-            print('>> finished executing inserts in',
+            print('finished executing inserts in',
                   s_to_ms(end-start, 5), 'ms')
 
             # start = timer()
-            # print("> executing stmt:", ellipsize(query, 50))
+            # print("executing stmt:", ellipsize(query, 50))
             cursor.execute(query)
             # end = timer()
-            # print('>> finished executing query in',
+            # print('finished executing query in',
             #       s_to_ms(end-start, 5), 'ms')
 
             data_return = cursor.fetchall()
@@ -142,12 +142,13 @@ class DataTempManager:
         # generate CREATE TEMP TABLE statements
         create = Mapper.generate_sql_create_temp_table_from_columns(
             entity, columns, True)
-        print("> prepared stmt:", ellipsize(create, 50))
+        print("prepared stmt:", ellipsize(create, 50))
 
         # generate INSERT INTO TABLE statements
         insert = Mapper.generate_sql_insert_into_temp_table_from_bc_data(
             entity, columns, data, True)
-        print("> prepared stmt:", ellipsize(insert, 50))
+        if insert:
+            print("prepared stmt:", ellipsize(insert, 50))
 
         try:
             # Creating connection
@@ -167,7 +168,7 @@ class DataTempManager:
                 start = timer()
                 cursor.execute(create)
                 end = timer()
-                print('>> finished executing creates in',
+                print('finished executing creates in',
                       s_to_ms(end-start, 5), 'ms')
 
             # Inserting into the temp table
@@ -175,15 +176,15 @@ class DataTempManager:
                 start = timer()
                 cursor.execute(insert)
                 end = timer()
-                print('>> finished executing inserts in',
+                print('finished executing inserts in',
                       s_to_ms(end-start, 5), 'ms')
 
             # executing the received query
             start = timer()
-            print("> executing stmt:", ellipsize(query_select, 50))
+            print("executing stmt:", ellipsize(query_select, 50))
             cursor.execute(query_select)
             end = timer()
-            print('>> finished executing stmt in',
+            print('finished executing stmt in',
                   s_to_ms(end-start, 5), 'ms')
 
             to_update = cursor.fetchall()
@@ -191,20 +192,20 @@ class DataTempManager:
                 return ()
 
             start = timer()
-            print("> executing stmt:", ellipsize(query_update, 50))
+            print("executing stmt:", ellipsize(query_update, 50))
             cursor.execute(query_update)
             end = timer()
-            print('>> finished executing stmt in',
+            print('finished executing stmt in',
                   s_to_ms(end-start, 5), 'ms')
 
             query_select_updated = SQLAnalyzer('').generate_select_all_where_in(
                 entity, [add_single_quotes(x[0]) for x in to_update], DEFAULT_HASH)
 
             start = timer()
-            print("> executing stmt:", ellipsize(query_select_updated, 50))
+            print("executing stmt:", ellipsize(query_select_updated, 50))
             cursor.execute(query_select_updated)
             end = timer()
-            print('>> finished executing stmt in',
+            print('finished executing stmt in',
                   s_to_ms(end-start, 5), 'ms')
 
             data_return = cursor.fetchall()

@@ -7,94 +7,106 @@ from logger import log
 from threading import Thread
 from mapper.column import DEFAULT_ENTITY, DEFAULT_HASH, DEFAULT_PREVIOUS
 from mapper.mapper import Mapper
-from bigchaindb_driver import BigchainDB
 from configuration.config import Configuration
 from sql_analyzer.sql_analyzer import SQLAnalyzer
 from sqlclient.clientsql import ClientSQL
 from communication.request import Request
 from mapper.schema_manager import SchemaManager
 from mapper.persistence_model import BLOCKCHAIN
-from bigchaindb_driver.crypto import generate_keypair
 from index_manager.index_manager import IndexManager
 from sqlclient.data_temp_manager import DataTempManager
 from communication.query_type import DELETE, INSERT, SELECT, UPDATE
 from timeit import default_timer as timer
 from helpers.floats import s_to_ms
 import numpy as np
-from pymongo.mongo_client import MongoClient
 import datetime
 import os
 from dotenv import load_dotenv, find_dotenv
+from hfc.fabric import Client
+import uuid
+from asyncio import AbstractEventLoop, get_event_loop
+from pathlib import Path
+import os
+import json
 
 load_dotenv(find_dotenv())
 
-
 class ClientBlockchain(Thread):
-    use_mongo = bool(os.environ['USE_MONGO'])
-    mongo_string = os.environ['MONGO_STRING']
+    network_profile_path = os.getenv('NETWORK_PROFILE', 'test/fixtures/network.json')
 
     def __init__(self, request):
         super().__init__()
         self.result = None
         self.request = request
+        self.loop = get_event_loop()
+        self.cli = Client(net_profile=Path(self.network_profile_path))
+        self.requester = self.cli.get_user(org_name='org1.example.com', name='Admin')
+        self.peers = ['peer0.org1.example.com', 'peer1.org1.example.com']
+        self.channel = 'businesschannel'
+        self.cc_name = 'moon_cc'
 
     def run(self):
         if SELECT == self.request.q_type:
-            print('>> starting SELECT operation...')
+            print('starting SELECT...')
             start = timer()
             self.result = self._select_blockchain()
             end = timer()
-            print('>> finished SELECT in', s_to_ms(end-start, 5), 'ms')
+            print(f"({s_to_ms(end-start, 5)} ms) finished SELECT")
+
         elif INSERT == self.request.q_type:
-            print('>> starting INSERT operation...')
+            print('starting INSERT...')
             start = timer()
             self.result = self._insert_blockchain()
             end = timer()
-            print('>> finished INSERT in', s_to_ms(end-start, 5), 'ms')
+            print(f"({s_to_ms(end-start, 5)} ms) finished INSERT")
+
         elif UPDATE == self.request.q_type:
-            print('>> starting UPDATE operation...')
+            print('starting UPDATE...')
             start = timer()
             self.result = self._update_blockchain()
             end = timer()
-            print('>> finished UPDATE in', s_to_ms(end-start, 5), 'ms')
+            print(f"({s_to_ms(end-start, 5)} ms) finished UPDATE")
+
         elif DELETE == self.request.q_type:
-            print('>> starting DELETE operation...')
+            print('starting DELETE...')
             start = timer()
             self.result = self._delete_blockchain()
             end = timer()
-            print('>> finished DELETE in', s_to_ms(end-start, 5), 'ms')
+            print(f"({s_to_ms(end-start, 5)} ms) finished DELETE")
         else:
             raise Exception('Unrecognized Request Type')
 
-    def _persist_data_bc(self, data, entity):
+    def _write_to_bc(self, data: list[dict], entity: str) -> int:
         """
-        Stores data on Blockchain
-        :param data: List of dicts. It will be persisted
+        Stores data on Blockchain and its index on the index table
+        :param data: List of dicts with data to be stored
+        :param entity: Entity name
         :return: Number of affected rows
         """
         config = Configuration.get_instance()
 
-        bdb = BigchainDB(
-            'http://{}:{}'.format(config.bc_host, config.bc_port)
-        )
-        keypair = generate_keypair()
         try:
-            for d in data:
-                tx = bdb.transactions.prepare(
-                    operation='CREATE',
-                    signers=keypair.public_key,
-                    asset={'data': self._remove_special_chars(d)}
-                )
-                signed_tx = bdb.transactions.fulfill(
-                    tx,
-                    private_keys=keypair.private_key
-                )
-                transaction_sent = bdb.transactions.send_sync(signed_tx)
+            start = timer()
+            for item in data:
+                asset_id = str(uuid.uuid4())
+                tx = self.loop.run_until_complete(self.cli.chaincode_invoke(
+                    requestor=self.requester,
+                    channel_name=self.channel,
+                    peers=self.peers,
+                    args=['set', asset_id, json.dumps(self._remove_special_chars(item))],
+                    cc_name=self.cc_name,
+                    wait_for_event=True
+                ))
+                print('wrote tx:', tx)
+
                 IndexManager.store_index(
-                    self.request,
-                    transaction_sent,
-                    entity
+                    entity,
+                    item[SchemaManager.get_primary_key_by_entity(entity)],
+                    asset_id
                 )
+                print('wrote index:', asset_id)
+            end = timer()
+            print(f"({s_to_ms(end-start, 5)} ms) finished writing to blockchain")
         except Exception:
             log.e(
                 'Blockchain Client Module',
@@ -103,11 +115,11 @@ class ClientBlockchain(Thread):
             return 0
         return len(data)
 
-    def _get_bc_data(self, *entities) -> typing.Iterable[dict]:
+    def _get_bc_data(self, *entities) -> list[dict]:
         """
         Returns a formatted list of blockchain transaction data for the given list of entities.
 
-        :param entities: Entities with which to query blockchain tx data.
+        :param entities: Entities to get blockchain data for.
         :return: A list of dicts of blockchain tx data.
         """
         config = Configuration.get_instance()
@@ -119,60 +131,31 @@ class ClientBlockchain(Thread):
         entities_asset_ids = [IndexManager.get_ids_by_entity(
             self.request, entity) for entity in entities]
         # end = timer()
-        # print('>> finished getting asset ids in', s_to_ms(end-start, 5), 'ms')
+        # print('finished getting asset ids in', s_to_ms(end-start, 5), 'ms')
 
-        result_list = []
+        asset_ids = pydash.flatten(entities_asset_ids)
 
-        if ClientBlockchain.use_mongo:
-            asset_ids = pydash.flatten(entities_asset_ids)
-
-            # start = timer()
-            db: MongoClient = MongoClient(
-                f"{ClientBlockchain.mongo_string}", connect=False)
-            # end = timer()
-            # print('>> connected to MongoDB in', s_to_ms(end-start, 5), 'ms')
-
-            # TODO: batch-loading assets
-            # start = timer()
-            assets = db['bigchain']['assets'].find({"id": {"$in": asset_ids}}, {"id": 1, "data": 1})
-            # end = timer()
-            # print('>> finished querying MongoDB in', s_to_ms(end-start, 5), 'ms')
-
-            # TODO: optimize this
-            # start = timer()
-            # for asset in assets:
-            #     # print(truncate(asset))
-            #     asset_data = asset['data']
-            #     asset_data[DEFAULT_HASH] = asset['id']
-            #     result_list.append(asset_data)
-            # result_list = [dict(**asset['data'], DEFAULT_HASH = asset['id']) for asset in assets]
-            result_list = list(assets)
-            # end = timer()
-            # print('>> finished formatting data in', s_to_ms(end-start, 5), 'ms')
-        else:
-            bdb = BigchainDB(
-                'http://{}:{}'.format(config.bc_host, config.bc_port))
-
-            for asset_id in pydash.flatten(entities_asset_ids):
-                try:
-                    tx = bdb.transactions.retrieve(asset_id)
-                except (Exception):
-                    tx = None
-
-                if tx:
-                    tx_data = tx['asset']['data']
-                    tx_data[DEFAULT_HASH] = asset_id
-                    result_list.append(tx_data)
+        # TODO: batch-loading assets
+        # TODO: get using range, list or specific asset ids
+        # TODO: get using timestamps (before, after, between timestamps)
+        # start = timer()
+        assets = json.loads(self.loop.run_until_complete(self.cli.chaincode_invoke(
+            requestor=self.requester,
+            channel_name=self.channel,
+            peers=self.peers,
+            args=['getList', *asset_ids],
+            cc_name=self.cc_name,
+            wait_for_event=True
+        )))
 
         end = timer()
-        print('>> finished retrieving data in', s_to_ms(end-start, 5), 'ms')
+        print(f"({s_to_ms(end-start, 5)} ms) retrieved assets:", assets)
 
-        return result_list
+        return assets
 
     def _select_blockchain(self):
         """
         Executes a SELECT query for blockchain assets.
-
         Creates a temp table using the requested entities, executes the SELECT there and returns results.
 
         :return: List of tuples containing the query results.
@@ -201,7 +184,7 @@ class ClientBlockchain(Thread):
             self.request.q_entities[0]
         )
 
-        return self._persist_data_bc(data_transaction, self.request.q_entities[0])
+        return self._write_to_bc(data_transaction, self.request.q_entities[0])
 
     def _update_blockchain(self):
         """
@@ -271,13 +254,12 @@ class ClientBlockchain(Thread):
 
         # Save the new assets
         start = timer()
-        status = self._persist_data_bc(
+        status = self._write_to_bc(
             new_assets_to_append,
             self.request.q_entities[0]
         )
         end = timer()
-        print('>> finished saving new assets in',
-              s_to_ms(end-start, 5), 'ms')
+        print(f"({s_to_ms(end-start, 5)} ms) finished writing new assets")
 
         # if any new assets were added, remove index entries from the older ones
         if status > 0:
@@ -309,8 +291,7 @@ class ClientBlockchain(Thread):
             result = client_sql.get_result()
 
             end = timer()
-            print('>> finished deleting old assets in',
-                  s_to_ms(end-start, 5), 'ms')
+            print(f"({s_to_ms(end-start, 5)} ms) finished deleting index entries")
 
             if result == status:
                 return status

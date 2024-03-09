@@ -21,11 +21,11 @@ class IndexManager:
         config = Configuration.get_instance()
         start = timer()
 
-        query_get_index = 'SELECT bc_entry FROM {}_index'.format(entity)
+        query_get_index = f"SELECT bc_entry FROM {entity}_index"
         req = Request(
             q_query=query_get_index,
             q_type=SELECT,
-            q_entities=['{}_index'.format(entity)],
+            q_entities=[f"{entity}_index"],
             db_port=config.db_port,
             db_host=config.db_host,
             db_name=config.bc_index_dbname,
@@ -48,30 +48,26 @@ class IndexManager:
 
         end = timer()
 
-        print('>> finished retrieving index entries in',
+        print('finished retrieving index entries in',
               s_to_ms(end-start, 5), 'ms')
         return list_assets_ids
 
     @staticmethod
-    def store_index(request, data, entity_to_save):
+    def store_index(entity, bc_id, rbd_id):
         """
         Stores an index entry for a newly recorded
         transaction on the blockchain
-        :param request: Request information
-        :param data: The transaction_id
-        :param entity_to_save: The involved entity
+        :param entity: The entity name
+        :param bc_id: The blockchain transaction asset id
+        :param rbd_id: The RBD primary key
         """
         config = Configuration.get_instance()
 
-        pk_name = SchemaManager.get_primary_key_by_entity(entity_to_save)
-        pk_value = data['asset']['data'][pk_name]
-        sql_store_index = 'INSERT INTO {}_index (id, bc_entry) ' \
-            'VALUES(\'{}\',\'{}\')' \
-            .format(entity_to_save, pk_value, data['id'])
+        sql_store_index = f"INSERT INTO {entity}_index (id, bc_entry) VALUES ({rbd_id}, {bc_id})"
         req = Request(
             q_query=sql_store_index,
             q_type=INSERT,
-            q_entities=['{}_index'.format(entity_to_save)],
+            q_entities=[f"{entity}_index"],
             db_port=config.db_port,
             db_host=config.db_host,
             db_name=config.bc_index_dbname,

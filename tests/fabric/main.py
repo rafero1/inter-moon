@@ -2,66 +2,107 @@ from hfc.fabric import Client
 from asyncio import AbstractEventLoop, get_event_loop
 from pathlib import Path
 import os
+import uuid
+import json
 
 root = Path(__file__).parent
 
-if __name__ == "__main__":
-    loop = get_event_loop()
+loop = get_event_loop()
 
-    cli = Client(net_profile=root.joinpath('network.json'))
+cli = Client(net_profile=root.joinpath('test/fixtures/network.json'))
 
-    # print(cli.organizations)  # orgs in the network
-    # print(cli.peers)  # peers in the network
-    # print(cli.orderers)  # orderers in the network
-    # print(cli.CAs)  # ca nodes in the network
+org1_admin = cli.get_user(org_name='org1.example.com', name='Admin') # User instance with the Org1 admin's certs
+org2_admin = cli.get_user(org_name='org2.example.com', name='Admin') # User instance with the Org2 admin's certs
+orderer_admin = cli.get_user(org_name='orderer.example.com', name='Admin') # User instance with the orderer's certs
 
-    org1_admin = cli.get_user(org_name='org1.example.com', name='Admin') # User instance with the Org1 admin's certs
-    org2_admin = cli.get_user(org_name='org2.example.com', name='Admin') # User instance with the Org2 admin's certs
-    orderer_admin = cli.get_user(org_name='orderer.example.com', name='Admin') # User instance with the orderer's certs
+# gopath_bak = os.environ.get('GOPATH', '')
+# gopath = os.path.normpath(os.path.join(
+#     root,
+#     'test/fixtures/chaincode'
+# ))
+# os.environ['GOPATH'] = os.path.abspath(gopath)
+os.environ['GOPATH'] = root.joinpath('moon').as_posix()
 
+def setup_org():
+    response = loop.run_until_complete(cli.channel_create(
+        orderer='orderer.example.com',
+        channel_name='businesschannel',
+        requestor=org1_admin,
+        config_yaml='test/fixtures/e2e_cli/',
+        channel_profile='TwoOrgsChannel'
+    ))
+    print("create_channel:\n", response)
 
+    response = loop.run_until_complete(cli.channel_join(
+        requestor=org1_admin,
+        channel_name='businesschannel',
+        peers=['peer0.org1.example.com',
+        'peer1.org1.example.com'],
+        orderer='orderer.example.com'
+    ))
+    print("join:\n", response)
 
-    # response = loop.run_until_complete(cli.channel_create(
-    #     orderer='orderer.example.com',
-    #     channel_name='businesschannel',
-    #     requestor=org1_admin,
-    #     config_yaml='test/fixtures/e2e_cli/',
-    #     channel_profile='TwoOrgsChannel'
-    # ))
+    response = loop.run_until_complete(cli.channel_join(
+        requestor=org2_admin,
+        channel_name='businesschannel',
+        peers=['peer0.org2.example.com',
+        'peer1.org2.example.com'],
+        orderer='orderer.example.com'
+    ))
+    print("join:\n", response)
 
-    # responses = loop.run_until_complete(cli.channel_join(
-    #     requestor=org1_admin,
-    #     channel_name='businesschannel',
-    #     peers=['peer0.org1.example.com',
-    #     'peer1.org1.example.com'],
-    #     orderer='orderer.example.com'
-    # ))
+def install_cc():
+    cli.new_channel('businesschannel')
 
-    # responses = loop.run_until_complete(cli.channel_join(
-    #     requestor=org2_admin,
-    #     channel_name='businesschannel',
-    #     peers=['peer0.org2.example.com',
-    #     'peer1.org2.example.com'],
-    #     orderer='orderer.example.com'
-    # ))
-
-    # cli.new_channel('businesschannel')
-
-    responses = loop.run_until_complete(cli.chaincode_install(
+    return loop.run_until_complete(cli.chaincode_install(
         requestor=org1_admin,
         peers=['peer0.org1.example.com',
                 'peer1.org1.example.com'],
-        cc_path='github.com/example_cc',
-        cc_name='example_cc',
+        cc_path='github.com/rafero1',
+        cc_name='moon_cc',
         cc_version='v1.0'
     ))
 
-    # Instantiate Chaincode in Channel, the response should be true if succeed
-    response = loop.run_until_complete(cli.chaincode_instantiate(
+def init_cc():
+    return loop.run_until_complete(cli.chaincode_instantiate(
         requestor=org1_admin,
         channel_name='businesschannel',
         peers=['peer0.org1.example.com'],
-        args=['a', '200', 'b', '300'],
-        cc_name='example_cc',
+        args=[],
+        cc_name='moon_cc',
         cc_version='v1.0'
     ))
+
+def invoke_cc(args):
+    response = loop.run_until_complete(cli.chaincode_invoke(
+        requestor=org1_admin,
+        channel_name='businesschannel',
+        peers=['peer0.org1.example.com'],
+        args=args,
+        cc_name='moon_cc',
+        transient_map=None, # optional, for private data
+        wait_for_event=True, # for being sure chaincode invocation has been commited in the ledger, default is on tx event
+        #cc_pattern='^invoked*' # if you want to wait for chaincode event and you have a `stub.SetEvent("invoked", value)` in your chaincode
+    ))
+    return json.loads(response)
+
+if __name__ == "__main__":
+    # setup_org()
+
+    response = install_cc()
+    print("install:\n", response)
+
+    response = init_cc()
+    print("init:\n", response)
+
+    # response = invoke_cc(['getList', 'd643ba95-5063-493d-9b6f-1020bcb2136e', '081c4c9f-3991-4083-afdd-e8d0c83181ec'])
+    # print("invoke:\n", json.loads(response))
+
+    # response = invoke_cc(['get', '6ab8f728-28c6-458f-a2ae-2ced71d88be5'])
+    # print("invoke:\n", json.loads(response))
+
+    # key = str(uuid.uuid4())
+    # asset = json.dumps({"__entity": "user_files", "name": "Marcos", "email": "marco@example.com", "result": True, "value": 0.5, "unit": "mg/dL", "date": "2020-01-01"})
+    # print(key, asset)
+    # response = invoke_cc(['set', key, asset])
+    # print("invoke:\n", json.loads(response))
