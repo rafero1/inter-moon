@@ -1,3 +1,4 @@
+from logger import log
 import sqlparse
 from sql_metadata import Parser
 from communication.query_type import DELETE, INSERT, SELECT, UPDATE
@@ -5,6 +6,8 @@ from sqlparse import sql as SQL
 from sqlparse import tokens as T
 
 class QueryAnalyzer:
+    JOINS = ('join', 'inner join', 'outer join', 'cross join', 'full join', 'left join', 'right join', 'left outer join', 'right outer join')
+
     @staticmethod
     def get_type_query(query):
         """
@@ -49,32 +52,50 @@ class QueryAnalyzer:
         stmt = stmt_list[0]
         tokens = stmt.tokens
 
-        identifiers = []
+        identifiers = set()
 
         def rec_get_identifiers(tokens, identifiers):
-            # print(tokens)
+            # log.i(
+            #     'SQL Analyzer',
+            #     f"Tokens: {tokens}",
+            # )
+
+            # loop through tokens until we find any table names
             for i, token in enumerate(tokens):
-                # if the token is a list of identifiers, add them all
-                if isinstance(token, SQL.IdentifierList) and str(tokens[i-2]).lower() in ('from', 'join'):
-                    for t in token.get_identifiers():
-                        if t.get_real_name() not in identifiers:
-                            identifiers.append(t.get_real_name())
-                # if the token is an identifier, it could be a subquery, a JOIN or a FROM
+                previous_keyword = str(tokens[i-2]).lower()
+
+                # if the current token is a list of identifiers, it is a list of tables
+                if isinstance(token, SQL.IdentifierList):
+                    if previous_keyword == 'from' or previous_keyword in QueryAnalyzer.JOINS:
+                        for identifier in token.get_identifiers():
+                            identifiers.add(identifier.get_real_name())
+
+                # if it is an identifier and it is after FROM, UPDATE or JOIN, it could be a table
                 elif isinstance(token, sqlparse.sql.Identifier):
-                    # if the token comes after a FROM or JOIN, it could be a table name
-                    if str(tokens[i-2]).lower() == 'from' or 'join' in str(tokens[i-2]).lower():
-                        if token.token_first().ttype == T.Name:
-                            if token.get_real_name() not in identifiers:
-                                identifiers.append(token.get_real_name())
+                    if previous_keyword in ('from', 'update') or previous_keyword in QueryAnalyzer.JOINS:
+                        first_child = token.token_first()
+                        if first_child is not None and first_child.ttype == T.Name:
+                            identifiers.add(token.get_real_name())
+
                     # if it is a subquery, recurse
                     for t in token.tokens:
                         if isinstance(t, sqlparse.sql.Parenthesis):
                             rec_get_identifiers(t.tokens, identifiers)
+
+                # if it is a function, it could be a table name after INSERT INTO
+                elif isinstance(token, SQL.Function) and previous_keyword in ('into'):
+                    identifiers.add(token.get_real_name())
+
                 # if the token is a WHERE, a comparison (inside a WHERE) or a subquery, recurse
-                elif isinstance(token, SQL.Where) or isinstance(token, SQL.Comparison) or isinstance(token, SQL.Parenthesis):
+                elif isinstance(token, (SQL.Where, SQL.Comparison, SQL.Parenthesis)):
                     rec_get_identifiers(token.tokens, identifiers)
 
         rec_get_identifiers(tokens, identifiers)
+
+        log.i(
+            'SQL Analyzer',
+            f"Identifiers: {identifiers}",
+        )
 
         return identifiers
 

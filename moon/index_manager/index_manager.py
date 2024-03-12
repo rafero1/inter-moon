@@ -30,11 +30,7 @@ class IndexManager:
             db_host=config.db_host,
             db_name=config.bc_index_dbname,
             db_password=config.db_password,
-            db_user=config.db_user,
-            bc_host=config.bc_host,
-            bc_port=config.bc_port,
-            bc_private_key=config.bc_private_key,
-            bc_public_key=config.bc_public_key
+            db_user=config.db_user
         )
 
         sql_client = ClientSQL(request=req)
@@ -72,11 +68,8 @@ class IndexManager:
             db_host=config.db_host,
             db_name=config.bc_index_dbname,
             db_password=config.db_password,
-            db_user=config.db_user,
-            bc_host=config.bc_host,
-            bc_port=config.bc_port,
-            bc_private_key=config.bc_private_key,
-            bc_public_key=config.bc_public_key)
+            db_user=config.db_user
+        )
         sql_client = ClientSQL(request=req)
         sql_client.start()
         sql_client.join()

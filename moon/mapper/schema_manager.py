@@ -118,7 +118,7 @@ class SchemaManager:
         return ent['foreign_key']
 
     @staticmethod
-    def get_entity_persistence(name):
+    def get_entity_db(name):
         """
         Get the persistence model used on the entity
         :param name: Entity name

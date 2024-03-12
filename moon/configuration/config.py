@@ -8,12 +8,6 @@ class Configuration:
     moon_host = None
     moon_port = None
 
-    network_profile_path = None
-    requester = None
-    peers = None
-    channel = None
-    cc_name = None
-
     sql_adapter = None
     db_user = None
     db_name = None
@@ -22,10 +16,12 @@ class Configuration:
     db_host = None
     bc_index_dbname = None
 
-    bc_port = None
-    bc_host = None
-    bc_public_key = None
-    bc_private_key = None
+    network_profile_path = None
+    requester_org = None
+    requester_name = None
+    peers = None
+    channel = None
+    cc_name = None
 
 
     def __init__(self):
@@ -39,18 +35,12 @@ class Configuration:
     def get_instance() -> 'Configuration':
         if Configuration.__instance is None:
             Configuration()
-        return Configuration.__instance
+        return Configuration.__instance or Configuration()
 
     def __load_config(self):
         dotenv.load_dotenv(dotenv.find_dotenv())
         self.moon_host = os.getenv('MOON_HOST')
         self.moon_port = os.getenv('MOON_PORT')
-
-        self.network_profile_path = os.getenv('NETWORK_PROFILE_PATH')
-        self.requester = os.getenv('REQUESTER')
-        self.peers = os.getenv('PEERS')
-        self.channel = os.getenv('CHANNEL')
-        self.cc_name = os.getenv('CC_NAME')
 
         self.sql_adapter = os.getenv('SQL_ADAPTER')
         self.db_user = os.getenv('DB_USER')
@@ -60,7 +50,9 @@ class Configuration:
         self.db_host = os.getenv('DB_HOST')
         self.bc_index_dbname = os.getenv('BC_INDEX_DBNAME')
 
-        self.bc_port = os.getenv('BC_PORT')
-        self.bc_host = os.getenv('BC_HOST')
-        self.bc_public_key = os.getenv('BC_PUBLIC_KEY')
-        self.bc_private_key = os.getenv('BC_PRIVATE_KEY')
+        self.network_profile_path = os.getenv('NETWORK_PROFILE_PATH')
+        self.requester_org = os.getenv('REQUESTER_ORG')
+        self.requester_name = os.getenv('REQUESTER_NAME')
+        self.peers = str(os.getenv('PEERS')).split(',')
+        self.channel = os.getenv('CHANNEL')
+        self.cc_name = os.getenv('CC_NAME')

@@ -161,4 +161,5 @@ cython_debug/
 
 .vscode
 moon/.vscode
-moon_client_api/.vscode
+test_cli/.vscode
+postgres-data

@@ -1,7 +1,4 @@
 class NewRequest:
-    """
-    MOON wrapper for SQL requests to be made to either the Blockchain or Relational systems.
-    """
     INSERT = 0
     UPDATE = 1
     DELETE = 2

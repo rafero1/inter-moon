@@ -17,7 +17,7 @@ from sql_analyzer.sql_analyzer import SQLAnalyzer
 
 class DataTempManager:
     @staticmethod
-    def select_with_conditionals_in_rdb(request: Request, query: str, bc_data, bc_entities: typing.List[str], with_hash: bool = False):
+    def select_with_conditionals_in_rdb(request: Request, query: str, bc_data: list[dict], bc_entities: typing.List[str], with_hash: bool = False):
         """
         Executes a SELECT operation on the relational database using the given parameters
         and returns a tuple containing the results.
@@ -36,22 +36,13 @@ class DataTempManager:
         inserts: typing.List[str] = []
 
         for i, entity_name in enumerate(bc_entities):
-            # get list of unique columns among all given assets
-            # start = timer()
-            columns = Mapper.get_columns_from_assets(entity_name, bc_data[i])
-            # end = timer()
-            # print("finished getting columns in", s_to_ms(end-start, 5), "ms")
+            columns = Mapper.get_entity_columns(entity_name)
 
             # generate CREATE TEMP TABLE statements
-            # start = timer()
             stmt = Mapper.generate_sql_create_temp_table_from_columns(
                 entity_name, columns, with_hash)
             if stmt:
                 creates.append(stmt)
-            # end = timer()
-
-            # print("prepared stmt:", ellipsize(stmt, 50))
-            # print("finished preparing creates in", s_to_ms(end-start, 5), "ms")
 
             # generate INSERT INTO TABLE statements
             # TODO: optimize this
@@ -137,7 +128,7 @@ class DataTempManager:
         data_return = None
 
         # get list of unique columns among all given assets
-        columns = Mapper.get_columns_from_assets(entity, data)
+        columns = Mapper.get_entity_columns(entity)
 
         # generate CREATE TEMP TABLE statements
         create = Mapper.generate_sql_create_temp_table_from_columns(

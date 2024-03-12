@@ -5,9 +5,10 @@ from helpers.strings import truncate
 import pydash
 from logger import log
 from threading import Thread
-from mapper.column import DEFAULT_ENTITY, DEFAULT_HASH, DEFAULT_PREVIOUS
+from mapper.column import DEFAULT_ENTITY, DEFAULT_HASH, DEFAULT_PREVIOUS, DEFAULT_STATUS
 from mapper.mapper import Mapper
 from configuration.config import Configuration
+from helpers.dicts import normalize
 from sql_analyzer.sql_analyzer import SQLAnalyzer
 from sqlclient.clientsql import ClientSQL
 from communication.request import Request
@@ -24,7 +25,7 @@ import os
 from dotenv import load_dotenv, find_dotenv
 from hfc.fabric import Client
 import uuid
-from asyncio import AbstractEventLoop, get_event_loop
+import asyncio
 from pathlib import Path
 import os
 import json
@@ -38,7 +39,10 @@ class ClientBlockchain(Thread):
         super().__init__()
         self.result = None
         self.request = request
-        self.loop = get_event_loop()
+
+        self.loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(self.loop)
+
         self.cli = Client(net_profile=Path(self.network_profile_path))
         self.requester = self.cli.get_user(org_name='org1.example.com', name='Admin')
         self.peers = ['peer0.org1.example.com', 'peer1.org1.example.com']
@@ -93,7 +97,7 @@ class ClientBlockchain(Thread):
                     requestor=self.requester,
                     channel_name=self.channel,
                     peers=self.peers,
-                    args=['set', asset_id, json.dumps(self._remove_special_chars(item))],
+                    args=['set', asset_id, json.dumps(normalize(item))],
                     cc_name=self.cc_name,
                     wait_for_event=True
                 ))
@@ -164,7 +168,7 @@ class ClientBlockchain(Thread):
         bc_entities = []
 
         for entity in self.request.q_entities:
-            if SchemaManager.get_entity_persistence(entity) == BLOCKCHAIN:
+            if SchemaManager.get_entity_db(entity) == BLOCKCHAIN:
                 bc_entities.append(entity)
                 bc_data.append(self._get_bc_data(entity))
 
@@ -229,8 +233,8 @@ class ClientBlockchain(Thread):
         index_entries_to_delete = []
         new_assets_to_append = []
 
-        asset_attributes = Mapper.get_columns_from_assets(
-            self.request.q_entities[0], all_entity_data).column_names()
+        asset_attributes = Mapper.get_entity_columns(
+            self.request.q_entities[0]).column_names()
 
         # print(truncate(asset_attributes))
 
@@ -276,11 +280,7 @@ class ClientBlockchain(Thread):
                 db_name=config.bc_index_dbname,
                 db_password=config.db_password,
                 db_port=config.db_port,
-                bc_port=config.bc_port,
                 db_host=config.db_host,
-                bc_host=config.bc_host,
-                bc_public_key=config.bc_public_key,
-                bc_private_key=config.bc_private_key,
                 q_type=DELETE,
                 q_entities=[self.request.q_entities[0] + '_index']
             )
@@ -309,15 +309,17 @@ class ClientBlockchain(Thread):
         """
         config = Configuration.get_instance()
 
-        # 1. find assets with name X fulfilling Y conditional in the blockchain (Z = SELECT * FROM X WHERE Y ...)
+        # find assets with name X fulfilling Y conditional in the blockchain (Z = SELECT * FROM X WHERE Y ...)
         bc_data = []
         bc_entities = []
         for entity in self.request.q_entities:
-            if SchemaManager.get_entity_persistence(entity) == BLOCKCHAIN:
+            if SchemaManager.get_entity_db(entity) == BLOCKCHAIN:
                 bc_entities.append(entity)
                 bc_data.append(self._get_bc_data(entity))
 
-        # 2. get the bc index of every entry in Z
+        # TODO: create updated assets with _status: DELETED and _previous: _hash
+
+        # get the bc index of every entry in Z
         query = SQLAnalyzer(self.request.q_query).generate_select_from_identifier(
             self.request.q_entities[0], str(DEFAULT_HASH))
 
@@ -334,7 +336,7 @@ class ClientBlockchain(Thread):
 
         bc_hash_list = np.array(bc_hash_list)[:, 0].tolist()
 
-        # 3. delete rows from the index table of X which correspond to each index from Z
+        # delete rows from the index table of X which correspond to each index from Z
         sql_delete_index_entries = Mapper.sql_delete_index_entries(
             self.request.q_entities[0],
             bc_hash_list
@@ -345,11 +347,7 @@ class ClientBlockchain(Thread):
             db_name=config.bc_index_dbname,
             db_password=config.db_password,
             db_port=config.db_port,
-            bc_port=config.bc_port,
             db_host=config.db_host,
-            bc_host=config.bc_host,
-            bc_public_key=config.bc_public_key,
-            bc_private_key=config.bc_private_key,
             q_type=DELETE,
             q_entities=[self.request.q_entities[0] + '_index']
         )
@@ -359,75 +357,5 @@ class ClientBlockchain(Thread):
         client_sql.join()
         return client_sql.get_result()
 
-    @staticmethod
-    def _merge_two_dicts(x, y):
-        """
-        If the first and the second has the same key,
-        the second overwrites the value of the first
-        :param x: dict 1
-        :param y: dict 2
-        :return: a merged dict
-        """
-        z = copy.deepcopy(x)
-        z.update(y)
-        return z
-
-    @staticmethod
-    def _get_values_without_specific_keys(d, invalid_keys):
-        """
-        Gets a dict and remove specific keys,
-        returns only the values
-        :param d: a dict
-        :param keys: the keys list
-        :return: a dict without a listed keys
-        """
-        result = []
-        for key in d.keys():
-            if key not in invalid_keys:
-                result.append(d[key])
-        return result
-
-    def get_result(self, final_result=True):
-        '''
-        Get result of request
-        :param final_result: if its necessary
-            to convert the result data to tuple format
-        :return:
-        '''
-        # if self.request.q_type == SELECT and
-        # final_result == True and len(self.result) != 0:
-        #     # the aux will receive all
-        # result data, this is not separated by entity
-        #     aux = []
-        #     result_to_return = []
-        #     for list_entity in self.result:
-        #         for data in list_entity:
-        #             aux.append(data)
-        #
-        #     # removing 'entity' and 'hash' keys
-        #     for data in aux:
-        #         try:
-        #             del data["entity"]
-        #             del data["hash"]
-        #         except KeyError:
-        #             pass
-        #         data = tuple(data.values())
-        #         result_to_return.append(data)
-        # else:
-        #     result_to_return = self.result
-        # # return result_to_return
+    def get_result(self):
         return self.result
-
-    def _remove_special_chars(self, data):
-        """
-        Removes special chars from dict values
-        :param data: Dict
-        :return: A dict without special chars
-        """
-        for key in data:
-            if isinstance(data[key], str):
-                data[key] = data[key].replace('\'', '')
-            if isinstance(data[key], datetime.datetime) or isinstance(data[key], datetime.date):
-                data[key] = str(data[key])
-
-        return data

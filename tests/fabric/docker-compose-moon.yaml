@@ -8,9 +8,15 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
   moon:
-    build: .
-    network_mode: "host"
+    build: ../../
+    # network_mode: "host"
+    ports:
+      - "9654:9654"
+    volumes:
+      - ../../moon/.env:/var/www/moon/.env
+      - ../../moon:/var/www/moon
+
     depends_on:
       - postgres

@@ -7,6 +7,7 @@ from sqlclient.clientsql import ClientSQL
 from bcclient.bcclient import ClientBlockchain
 from mapper.schema_manager import SchemaManager
 from mapper.persistence_model import BLOCKCHAIN
+from communication.query_type import QueryType
 from configuration.config import Configuration
 
 class Scheduler(Thread):
@@ -30,6 +31,11 @@ class Scheduler(Thread):
                 # identify request type
                 request.q_type = QueryAnalyzer.get_type_query(request.q_query)
 
+                log.i(
+                    'Scheduler Module',
+                    f"Request type: {QueryType(request.q_type).name}"
+                )
+
                 # identify entities from the request
                 request.q_entities = QueryAnalyzer.get_entities(request.q_query)
 
@@ -38,7 +44,8 @@ class Scheduler(Thread):
                 try:
                     # check if any of the entities is stored in the blockchain
                     for entity in request.q_entities:
-                        if (SchemaManager.get_entity_persistence(entity) == BLOCKCHAIN):
+                        entity_type = SchemaManager.get_entity_db(entity)
+                        if entity_type == BLOCKCHAIN:
                             is_bc = True
                             break
                     if not is_bc:

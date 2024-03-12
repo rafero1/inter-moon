@@ -46,18 +46,12 @@ class Mapper:
         return list(pydash.omit(bc_asset['data'], omit).keys())
 
     @staticmethod
-    def get_columns_from_assets(entity_name: str, bc_data: typing.List[dict], omit: list = DEFAULT_OMITTED_COLUMNS) -> ColumnList:
-        # attributes = pydash.chain(bc_data).map(lambda asset: Mapper.get_property_names_from_asset(asset, omit)).flatten().uniq().value()
-
-        # schema manager-defined attributes for defining column types
+    def get_entity_columns(entity_name: str) -> ColumnList:
         schema_attrs = SchemaManager.get_attributes_name_type_pair_by_entity(
             entity_name)
 
-        # column_list = ColumnList([None] * len(attributes))
         column_list = ColumnList([None] * len(schema_attrs))
 
-        # for i, attr in enumerate(attributes):
-        #     column_list[i] = Column(attr, schema_attrs.get(attr, SQLColumnType.VARCHAR))
         for i, (col_name, col_type) in enumerate(schema_attrs.items()):
             column_list[i] = Column(col_name, col_type)
 
