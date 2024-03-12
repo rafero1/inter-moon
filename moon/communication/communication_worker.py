@@ -24,7 +24,7 @@ class Worker(Thread):
         self.scheduler = scheduler
 
         log.i(
-            'Communication Module - Worker {}'.format(self.id),
+            f'Communication Module - Worker {self.id}',
             'Start ...'
         )
 
@@ -46,23 +46,33 @@ class Worker(Thread):
         and enqueue it using the scheduler module
         """
         log.i(
-            'Communication Module - Worker {}'.format(self.id),
-            'New Connection: {}'.format(self.client)
+            f'Communication Module - Worker {self.id}',
+            f'New Connection: {self.client}'
         )
 
         # Waiting requests from this connection
         msg = self.con.recv(1024)
         msg = msg.decode('utf-8')
-        msg = " ".join(msg.split()) # normalize spaces
 
         log.i(
-            'Communication Module - Worker {}'.format(self.id),
-            'Request Received: {}'.format(msg)
+            f'Communication Module - Worker {self.id}',
+            f'Request Received: {msg}'
         )
 
-        # Creating the request object from string message
-        # request_dict = json.loads(msg)
-        request = NewRequest(msg)
+        # Split the request by double newline characters
+        split_request = msg.split('\r\n\r\n')
+
+        # The body of the request is the second part
+        body = split_request[1] if len(split_request) > 1 else ''
+        body = " ".join(body.split()) # normalize spaces
+
+        log.i(
+            f'Communication Module - Worker {self.id}',
+            f'Request Body: {body}'
+        )
+
+        # Creating the request object from message body
+        request = NewRequest(body)
 
         # Putting it in a wrapper
         request_wrapper = RequestWrapper(request)
@@ -79,13 +89,13 @@ class Worker(Thread):
         # Sending it back to the client
         self.con.send(response.encode('utf-8'))
         log.i(
-            'Communication Module - Worker {}'.format(self.id),
+            f'Communication Module - Worker {self.id}',
             'Response sent: {}'.format(response)
         )
 
         # The client sent END_COMMUNICATION
         self.con.close()
         log.i(
-            'Communication Module - Worker {}'.format(self.id),
+            f'Communication Module - Worker {self.id}',
             'Connection Closed'
         )
