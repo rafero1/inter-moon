@@ -32,8 +32,10 @@ import json
 
 load_dotenv(find_dotenv())
 
+
 class ClientBlockchain(Thread):
-    network_profile_path = os.getenv('NETWORK_PROFILE', 'test/fixtures/network.json')
+    network_profile_path = os.getenv(
+        'NETWORK_PROFILE', 'test/fixtures/network.json')
 
     def __init__(self, request):
         super().__init__()
@@ -44,7 +46,8 @@ class ClientBlockchain(Thread):
         asyncio.set_event_loop(self.loop)
 
         self.cli = Client(net_profile=Path(self.network_profile_path))
-        self.requester = self.cli.get_user(org_name='org1.example.com', name='Admin')
+        self.requester = self.cli.get_user(
+            org_name='org1.example.com', name='Admin')
         self.peers = ['peer0.org1.example.com', 'peer1.org1.example.com']
         self.channel = 'businesschannel'
         self.cc_name = 'moon_cc'
@@ -88,6 +91,7 @@ class ClientBlockchain(Thread):
         :return: Number of affected rows
         """
         config = Configuration.get_instance()
+        self.cli.new_channel(self.cc_name)
 
         try:
             start = timer()
@@ -143,6 +147,7 @@ class ClientBlockchain(Thread):
         # TODO: get using range, list or specific asset ids
         # TODO: get using timestamps (before, after, between timestamps)
         # start = timer()
+        self.cli.new_channel(self.cc_name)
         assets = json.loads(self.loop.run_until_complete(self.cli.chaincode_invoke(
             requestor=self.requester,
             channel_name=self.channel,

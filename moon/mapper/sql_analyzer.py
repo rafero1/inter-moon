@@ -5,8 +5,10 @@ from communication.query_type import DELETE, INSERT, SELECT, UPDATE
 from sqlparse import sql as SQL
 from sqlparse import tokens as T
 
+
 class QueryAnalyzer:
-    JOINS = ('join', 'inner join', 'outer join', 'cross join', 'full join', 'left join', 'right join', 'left outer join', 'right outer join')
+    JOINS = ('join', 'inner join', 'outer join', 'cross join', 'full join',
+             'left join', 'right join', 'left outer join', 'right outer join')
 
     @staticmethod
     def get_type_query(query):
@@ -97,7 +99,7 @@ class QueryAnalyzer:
             f"Identifiers: {identifiers}",
         )
 
-        return identifiers
+        return list(identifiers)
 
     @staticmethod
     def has_conditional(query):

@@ -17,6 +17,8 @@ services:
     volumes:
       - ../../moon/.env:/var/www/moon/.env
       - ../../moon:/var/www/moon
+      - ./network.json:/var/www/moon/network.json
+      - ./crypto-config:/var/www/moon/crypto-config
 
     depends_on:
       - postgres
