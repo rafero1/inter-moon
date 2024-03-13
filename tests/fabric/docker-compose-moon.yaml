@@ -11,9 +11,9 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
   moon:
     build: ../../
-    # network_mode: "host"
-    ports:
-      - "9654:9654"
+    network_mode: "host"
+    # ports:
+    #   - "9654:9654"
     volumes:
       - ../../moon/.env:/var/www/moon/.env
       - ../../moon:/var/www/moon

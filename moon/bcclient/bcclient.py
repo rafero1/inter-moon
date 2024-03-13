@@ -54,32 +54,40 @@ class ClientBlockchain(Thread):
 
     def run(self):
         if SELECT == self.request.q_type:
-            print('starting SELECT...')
             start = timer()
             self.result = self._select_blockchain()
             end = timer()
-            print(f"({s_to_ms(end-start, 5)} ms) finished SELECT")
+            log.i(
+                'Blockchain Client Module',
+                f"({s_to_ms(end-start, 5)} ms) finished SELECT"
+            )
 
         elif INSERT == self.request.q_type:
-            print('starting INSERT...')
             start = timer()
             self.result = self._insert_blockchain()
             end = timer()
-            print(f"({s_to_ms(end-start, 5)} ms) finished INSERT")
+            log.i(
+                'Blockchain Client Module',
+                f"({s_to_ms(end-start, 5)} ms) finished INSERT"
+            )
 
         elif UPDATE == self.request.q_type:
-            print('starting UPDATE...')
             start = timer()
             self.result = self._update_blockchain()
             end = timer()
-            print(f"({s_to_ms(end-start, 5)} ms) finished UPDATE")
+            log.i(
+                'Blockchain Client Module',
+                f"({s_to_ms(end-start, 5)} ms) finished UPDATE"
+            )
 
         elif DELETE == self.request.q_type:
-            print('starting DELETE...')
             start = timer()
             self.result = self._delete_blockchain()
             end = timer()
-            print(f"({s_to_ms(end-start, 5)} ms) finished DELETE")
+            log.i(
+                'Blockchain Client Module',
+                f"({s_to_ms(end-start, 5)} ms) finished DELETE"
+            )
         else:
             raise Exception('Unrecognized Request Type')
 
@@ -91,7 +99,7 @@ class ClientBlockchain(Thread):
         :return: Number of affected rows
         """
         config = Configuration.get_instance()
-        self.cli.new_channel(self.cc_name)
+        self.cli.new_channel(self.channel)
 
         try:
             start = timer()
@@ -100,21 +108,24 @@ class ClientBlockchain(Thread):
                 tx = self.loop.run_until_complete(self.cli.chaincode_invoke(
                     requestor=self.requester,
                     channel_name=self.channel,
-                    peers=self.peers,
+                    peers=[self.peers[0]],
                     args=['set', asset_id, json.dumps(normalize(item))],
                     cc_name=self.cc_name,
-                    wait_for_event=True
+                    # transient_map=None,
+                    # wait_for_event=True
                 ))
-                print('wrote tx:', tx)
 
                 IndexManager.store_index(
                     entity,
-                    item[SchemaManager.get_primary_key_by_entity(entity)],
-                    asset_id
+                    asset_id,
+                    item[SchemaManager.get_primary_key_by_entity(entity)]
                 )
-                print('wrote index:', asset_id)
             end = timer()
-            print(f"({s_to_ms(end-start, 5)} ms) finished writing to blockchain")
+
+            log.i(
+                'Blockchain Client Module',
+                f"({s_to_ms(end-start, 5)} ms) finished writing to blockchain"
+            )
         except Exception:
             log.e(
                 'Blockchain Client Module',
@@ -137,28 +148,43 @@ class ClientBlockchain(Thread):
         # start = timer()
         # get a list of lists of blockchain asset ids, separated by asset type
         entities_asset_ids = [IndexManager.get_ids_by_entity(
-            self.request, entity) for entity in entities]
+            entity) for entity in entities]
         # end = timer()
         # print('finished getting asset ids in', s_to_ms(end-start, 5), 'ms')
 
         asset_ids = pydash.flatten(entities_asset_ids)
 
+        log.i(
+            'Blockchain Client Module',
+            f"({s_to_ms(timer()-start, 5)} ms) finished getting asset ids"
+        )
+
         # TODO: batch-loading assets
         # TODO: get using range, list or specific asset ids
         # TODO: get using timestamps (before, after, between timestamps)
-        # start = timer()
-        self.cli.new_channel(self.cc_name)
-        assets = json.loads(self.loop.run_until_complete(self.cli.chaincode_invoke(
+        self.cli.new_channel(self.channel)
+
+        assets = self.loop.run_until_complete(self.cli.chaincode_invoke(
             requestor=self.requester,
             channel_name=self.channel,
-            peers=self.peers,
+            peers=[self.peers[0]],
             args=['getList', *asset_ids],
             cc_name=self.cc_name,
-            wait_for_event=True
-        )))
+            # transient_map=None,
+            # wait_for_event=True
+        ))
 
-        end = timer()
-        print(f"({s_to_ms(end-start, 5)} ms) retrieved assets:", assets)
+        log.i(
+            'Blockchain Client Module',
+            f"({s_to_ms(timer()-start, 5)} ms) retrieved assets from bc"
+        )
+
+        assets = json.loads(assets)
+
+        log.i(
+            'Blockchain Client Module',
+            f"({s_to_ms(timer()-start, 5)} ms) finished parsing assets from bc"
+        )
 
         return assets
 
@@ -268,7 +294,6 @@ class ClientBlockchain(Thread):
             self.request.q_entities[0]
         )
         end = timer()
-        print(f"({s_to_ms(end-start, 5)} ms) finished writing new assets")
 
         # if any new assets were added, remove index entries from the older ones
         if status > 0:

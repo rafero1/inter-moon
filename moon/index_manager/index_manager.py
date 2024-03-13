@@ -1,5 +1,6 @@
 from helpers.floats import s_to_ms
 from configuration.config import Configuration
+from logger import log
 from sqlclient.clientsql import ClientSQL
 from communication.request import Request
 from mapper.schema_manager import SchemaManager
@@ -10,7 +11,7 @@ from timeit import default_timer as timer
 class IndexManager:
 
     @staticmethod
-    def get_ids_by_entity(request, entity):
+    def get_ids_by_entity(entity):
         """
         Gets the ID of each data of an
         entity that is on the Blockchain
@@ -59,7 +60,7 @@ class IndexManager:
         """
         config = Configuration.get_instance()
 
-        sql_store_index = f"INSERT INTO {entity}_index (id, bc_entry) VALUES ({rbd_id}, {bc_id})"
+        sql_store_index = f"INSERT INTO {entity}_index (id, bc_entry) VALUES ('{rbd_id}', '{bc_id}')"
         req = Request(
             q_query=sql_store_index,
             q_type=INSERT,

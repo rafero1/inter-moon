@@ -118,9 +118,7 @@ func getList(stub shim.ChaincodeStubInterface, args []string) (string, error) {
 	}
 
 	// enclose result in square brackets
-	if len(args) > 1 {
-		result = "[" + result + "]"
-	}
+	result = "[" + result + "]"
 
 	return result, nil
 }
