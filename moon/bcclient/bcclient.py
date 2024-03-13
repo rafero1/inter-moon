@@ -145,12 +145,9 @@ class ClientBlockchain(Thread):
 
         start = timer()
 
-        # start = timer()
         # get a list of lists of blockchain asset ids, separated by asset type
         entities_asset_ids = [IndexManager.get_ids_by_entity(
             entity) for entity in entities]
-        # end = timer()
-        # print('finished getting asset ids in', s_to_ms(end-start, 5), 'ms')
 
         asset_ids = pydash.flatten(entities_asset_ids)
 
@@ -233,6 +230,8 @@ class ClientBlockchain(Thread):
         """
         config = Configuration.get_instance()
 
+        start = timer()
+
         # Get all bc assets for the given entity
         all_entity_data = self._get_bc_data(*self.request.q_entities)
 
@@ -288,17 +287,13 @@ class ClientBlockchain(Thread):
         # print(truncate(new_assets_to_append))
 
         # Save the new assets
-        start = timer()
         status = self._write_to_bc(
             new_assets_to_append,
             self.request.q_entities[0]
         )
-        end = timer()
 
         # if any new assets were added, remove index entries from the older ones
         if status > 0:
-            start = timer()
-
             sql_delete_index_entries = Mapper.sql_delete_index_entries(
                 self.request.q_entities[0],
                 index_entries_to_delete
@@ -319,9 +314,6 @@ class ClientBlockchain(Thread):
             client_sql.start()
             client_sql.join()
             result = client_sql.get_result()
-
-            end = timer()
-            print(f"({s_to_ms(end-start, 5)} ms) finished deleting index entries")
 
             if result == status:
                 return status
