@@ -25,11 +25,7 @@ class Mapper:
         hashes_to_delete = str(hashes_list)
         hashes_to_delete = hashes_to_delete.replace('[', '(')
         hashes_to_delete = hashes_to_delete.replace(']', ')')
-        sql_stmt = 'DELETE FROM {}_index WHERE bc_entry IN {}'.format(
-            entity,
-            hashes_to_delete
-        )
-        print("prepared stmt:", ellipsize(sql_stmt))
+        sql_stmt = f"DELETE FROM {entity}_index WHERE bc_entry IN {hashes_to_delete}"
         return sql_stmt
 
     @staticmethod
@@ -107,7 +103,7 @@ class Mapper:
         values_list = (
             "(" + ",".join(
                 attr.get_insert_value() for attr in (Attribute(col, asset.get(col.name, None)) for col in columns)
-        ) + ")" for asset in assets)
+            ) + ")" for asset in assets)
 
         # def process_asset(asset):
         #     return "(" + ",".join(

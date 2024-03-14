@@ -134,22 +134,8 @@ class ClientBlockchain(Thread):
             return 0
         return len(data)
 
-    def _get_bc_data(self, *entities) -> list[dict]:
-        """
-        Returns a formatted list of blockchain transaction data for the given list of entities.
-
-        :param entities: Entities to get blockchain data for.
-        :return: A list of dicts of blockchain tx data.
-        """
-        config = Configuration.get_instance()
-
+    def _get_bc_data(self, *hash_list) -> list[dict]:
         start = timer()
-
-        # get a list of lists of blockchain asset ids, separated by asset type
-        entities_asset_ids = [IndexManager.get_ids_by_entity(
-            entity) for entity in entities]
-
-        asset_ids = pydash.flatten(entities_asset_ids)
 
         log.i(
             'Blockchain Client Module',
@@ -165,7 +151,7 @@ class ClientBlockchain(Thread):
             requestor=self.requester,
             channel_name=self.channel,
             peers=[self.peers[0]],
-            args=['getList', *asset_ids],
+            args=['getList', *hash_list],
             cc_name=self.cc_name,
             # transient_map=None,
             # wait_for_event=True
@@ -185,6 +171,13 @@ class ClientBlockchain(Thread):
 
         return assets
 
+    def _get_bc_data_by_entity(self, *entities) -> list[dict]:
+        entity_hashes = [IndexManager.get_ids_by_entity(
+            entity) for entity in entities]
+        bc_hashes = pydash.flatten(entity_hashes)
+
+        return self._get_bc_data(*bc_hashes)
+
     def _select_blockchain(self):
         """
         Executes a SELECT query for blockchain assets.
@@ -198,7 +191,7 @@ class ClientBlockchain(Thread):
         for entity in self.request.q_entities:
             if SchemaManager.get_entity_db(entity) == BLOCKCHAIN:
                 bc_entities.append(entity)
-                bc_data.append(self._get_bc_data(entity))
+                bc_data.append(self._get_bc_data_by_entity(entity))
 
         return DataTempManager.select_with_conditionals_in_rdb(
             self.request,
@@ -230,67 +223,70 @@ class ClientBlockchain(Thread):
         """
         config = Configuration.get_instance()
 
-        start = timer()
+        hash_list = IndexManager.get_ids_by_entity(self.request.q_entities[0])
 
-        # Get all bc assets for the given entity
-        all_entity_data = self._get_bc_data(*self.request.q_entities)
-
-        if all_entity_data is None or len(all_entity_data) == 0:
+        bc_data = self._get_bc_data(*hash_list)
+        if bc_data is None or len(bc_data) == 0:
             return 0
 
-        # Generate a SELECT query using whatever conditionals or operands were given on the original UPDATE query
+        # log.i('Blockchain Client Module',
+        #       f"all_entity_data: {bc_data}")
+
         query_select = SQLAnalyzer(
-            self.request.q_query).generate_select_from_identifier(self.request.q_entities[0], select=DEFAULT_HASH, bring_remainder=False)
+            self.request.q_query).generate_select_from_identifier(self.request.q_entities[0], select=DEFAULT_HASH, include_predicates=False)
 
         conditional = SQLAnalyzer(self.request.q_query).get_conditonal()
         if conditional:
             query_select += ' ' + conditional
 
-        # Generate updated assets to later append into the blockchain
+        # log.i('Blockchain Client Module', f"query_select: {query_select}")
+
+        for i, asset in enumerate(bc_data):
+            asset[DEFAULT_HASH] = hash_list[i]
+
         updated_asset_tuples = DataTempManager.update_bc_in_rdb(
             self.request,
             self.request.q_query,
             query_select,
-            all_entity_data,
+            bc_data,
             self.request.q_entities[0]
         )
 
-        # print(truncate(updated_asset_tuples))
+        # TODO: Verify if the update actually checks for changes before continuing
+
+        log.i('Blockchain Client Module',
+              f"updated_asset_tuples: {updated_asset_tuples}")
 
         if updated_asset_tuples is None or len(updated_asset_tuples) == 0:
             return 0
 
         index_entries_to_delete = []
-        new_assets_to_append = []
+        new_assets = []
 
-        asset_attributes = Mapper.get_entity_columns(
+        attributes = Mapper.get_entity_columns(
             self.request.q_entities[0]).column_names()
+        attributes.insert(0, DEFAULT_ENTITY)
+        attributes.append(DEFAULT_PREVIOUS)
 
-        # print(truncate(asset_attributes))
+        for i in range(len(updated_asset_tuples)):
+            values = (
+                self.request.q_entities[0], *updated_asset_tuples[i])
+            new_asset = dict(zip(attributes, values))
 
-        asset_attributes.insert(0, DEFAULT_ENTITY)
-        asset_attributes.append(DEFAULT_PREVIOUS)
+            new_assets.append(new_asset)
+            index_entries_to_delete.append(new_asset[DEFAULT_PREVIOUS])
 
-        # create the updated assets
-        for asset in updated_asset_tuples:
-            # get the asset data
-            asset = list(asset)
-            asset.insert(0, self.request.q_entities[0])
-            asset_data = dict(zip(asset_attributes, asset))
-
-            # Add the newly-created asset to a list so we can append them to the blockchain later
-            new_assets_to_append.append(asset_data)
-
-            # Add the id of the old asset to a list so we can delete them all later
-            index_entries_to_delete.append(asset_data['_previous'])
-
-        # print(truncate(new_assets_to_append))
+        log.i('Blockchain Client Module',
+              f"new_assets_to_append: {new_assets}")
 
         # Save the new assets
         status = self._write_to_bc(
-            new_assets_to_append,
+            new_assets,
             self.request.q_entities[0]
         )
+
+        log.i('Blockchain Client Module',
+              f"new_assets_to_append status: {status}")
 
         # if any new assets were added, remove index entries from the older ones
         if status > 0:
@@ -299,7 +295,10 @@ class ClientBlockchain(Thread):
                 index_entries_to_delete
             )
 
-            request_delete_index = Request(
+            log.i('Blockchain Client Module',
+                  f"sql_delete_index_entries: {sql_delete_index_entries}")
+
+            request_delete_index_entries = Request(
                 q_query=sql_delete_index_entries,
                 db_user=config.db_user,
                 db_name=config.bc_index_dbname,
@@ -310,13 +309,15 @@ class ClientBlockchain(Thread):
                 q_entities=[self.request.q_entities[0] + '_index']
             )
 
-            client_sql = ClientSQL(request_delete_index)
+            client_sql = ClientSQL(request_delete_index_entries)
             client_sql.start()
             client_sql.join()
             result = client_sql.get_result()
 
-            if result == status:
-                return status
+            log.i('Blockchain Client Module',
+                  f"request_delete_index_entries result: {result}")
+
+            return result
         return 0
 
     def _delete_blockchain(self):
@@ -331,13 +332,14 @@ class ClientBlockchain(Thread):
         """
         config = Configuration.get_instance()
 
-        # find assets with name X fulfilling Y conditional in the blockchain (Z = SELECT * FROM X WHERE Y ...)
-        bc_data = []
-        bc_entities = []
-        for entity in self.request.q_entities:
-            if SchemaManager.get_entity_db(entity) == BLOCKCHAIN:
-                bc_entities.append(entity)
-                bc_data.append(self._get_bc_data(entity))
+        hash_list = IndexManager.get_ids_by_entity(self.request.q_entities[0])
+
+        bc_data = self._get_bc_data(*hash_list)
+        if bc_data is None or len(bc_data) == 0:
+            return 0
+
+        for i, asset in enumerate(bc_data):
+            asset[DEFAULT_HASH] = hash_list[i]
 
         # TODO: create updated assets with _status: DELETED and _previous: _hash
 
@@ -345,13 +347,17 @@ class ClientBlockchain(Thread):
         query = SQLAnalyzer(self.request.q_query).generate_select_from_identifier(
             self.request.q_entities[0], str(DEFAULT_HASH))
 
+        log.i('Blockchain Client Module', f"query: {query}")
+
         bc_hash_list = DataTempManager.select_with_conditionals_in_rdb(
             self.request,
             query,
-            bc_data,
-            bc_entities,
+            [bc_data],
+            [self.request.q_entities[0]],
             True
         )
+
+        log.i('Blockchain Client Module', f"bc_hash_list: {bc_hash_list}")
 
         if not bc_hash_list:
             return 0
@@ -363,6 +369,10 @@ class ClientBlockchain(Thread):
             self.request.q_entities[0],
             bc_hash_list
         )
+
+        log.i('Blockchain Client Module',
+              f"sql_delete_index_entries: {sql_delete_index_entries}")
+
         request_delete_index = Request(
             q_query=sql_delete_index_entries,
             db_user=config.db_user,
@@ -377,7 +387,12 @@ class ClientBlockchain(Thread):
         client_sql = ClientSQL(request_delete_index)
         client_sql.start()
         client_sql.join()
-        return client_sql.get_result()
+        result = client_sql.get_result()
+
+        log.i('Blockchain Client Module',
+              f"request_delete_index result: {result}")
+
+        return result
 
     def get_result(self):
         return self.result

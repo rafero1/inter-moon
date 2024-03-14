@@ -30,7 +30,7 @@ class SQLAnalyzer:
                 return str(token)
         return ''
 
-    def get_remainder_after_identifier(self) -> str:
+    def get_predicates_after_identifier(self) -> str:
         """
         Returns a string containing everything after the first identifier statement in a query.
 
@@ -50,19 +50,19 @@ class SQLAnalyzer:
                 return "".join([str(token) for token in stmt.tokens[i+2:]])
         return ''
 
-    def generate_select_from_identifier(self, table_identifier: str, select: str = '*', bring_remainder: bool = True):
+    def generate_select_from_identifier(self, table_identifier: str, select: str = '*', include_predicates: bool = True):
         """
         Generates a SELECT query from the base query, a given identifier and the chosen columns.
 
         :param table_identifier str: The table identifier.
         :param select str: The selected attributes.
-        :param bring_remainder str: Whether to bring the remainder of the original query into the SELECT or not.
+        :param include_predicates str: Whether to bring the remainder of the original query into the SELECT or not.
         :return str: The query in string format.
         """
 
-        remainder = self.get_remainder_after_identifier()
-        if bring_remainder and remainder:
-            return f"SELECT {select} FROM {table_identifier}" + " " + remainder
+        predicates = self.get_predicates_after_identifier()
+        if include_predicates and predicates:
+            return f"SELECT {select} FROM {table_identifier}" + " " + predicates
         else:
             return f"SELECT {select} FROM {table_identifier}"
 

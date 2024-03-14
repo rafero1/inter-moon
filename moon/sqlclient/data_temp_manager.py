@@ -17,7 +17,7 @@ from sql_analyzer.sql_analyzer import SQLAnalyzer
 
 class DataTempManager:
     @staticmethod
-    def select_with_conditionals_in_rdb(request: Request, query: str, bc_data: list[dict], bc_entities: typing.List[str], with_hash: bool = False):
+    def select_with_conditionals_in_rdb(request: Request, query: str, bc_data, bc_entities: typing.List[str], with_hash: bool = False) -> list[tuple] | None:
         """
         Executes a SELECT operation on the relational database using the given parameters
         and returns a tuple containing the results.
@@ -32,42 +32,34 @@ class DataTempManager:
         """
         config = Configuration.get_instance()
 
+        start = timer()
+
         creates: typing.List[str] = []
         inserts: typing.List[str] = []
 
         for i, entity_name in enumerate(bc_entities):
             columns = Mapper.get_entity_columns(entity_name)
 
-            # generate CREATE TEMP TABLE statements
             stmt = Mapper.generate_sql_create_temp_table_from_columns(
                 entity_name, columns, with_hash)
             if stmt:
                 creates.append(stmt)
 
-            # generate INSERT INTO TABLE statements
             # TODO: optimize this
-            # start = timer()
-            # stmt = Mapper.generate_sql_insert_into_temp_table_from_bc_data(
-            #     entity_name, columns, bc_data[i], with_hash)
-            # if stmt:
-            #     inserts.append(stmt)
             for j in range(0, len(bc_data[i]), 1000):
                 bc_data_slice = bc_data[i][j:j+1000]
-                stmt = Mapper.generate_sql_insert_into_temp_table_from_bc_data(entity_name, columns, bc_data_slice, with_hash)
+                stmt = Mapper.generate_sql_insert_into_temp_table_from_bc_data(
+                    entity_name, columns, bc_data_slice, with_hash)
                 if stmt:
                     inserts.append(stmt)
-            # end = timer()
 
-            # print("prepared stmt:", ellipsize(str(stmt), 50))
-            # print('finished preparing inserts in',
-            #     s_to_ms(end-start, 5), 'ms')
-
+            log.i('Data Temp Manager Module',
+                  f'({s_to_ms(timer()-start, 5)}) creates: {creates}')
 
         if not inserts:
-            return ()
+            return None
 
         try:
-            # creating connection
             driver = GenericDBDriver.get_instance()
             connection = driver.adapter.connect(
                 user=config.db_user,
@@ -79,40 +71,36 @@ class DataTempManager:
 
             cursor = connection.cursor()
 
-            # start = timer()
             for create in creates:
                 cursor.execute(create)
-            # end = timer()
-            # print('finished executing creates in',
-            #       s_to_ms(end-start, 5), 'ms')
 
-            start = timer()
+            log.i('Data Temp Manager Module',
+                  f'({s_to_ms(timer()-start, 5)}) executed creates: {creates}')
+
             for insert in inserts:
                 cursor.execute(insert)
-            end = timer()
-            print('finished executing inserts in',
-                  s_to_ms(end-start, 5), 'ms')
 
-            # start = timer()
-            # print("executing stmt:", ellipsize(query, 50))
+            log.i('Data Temp Manager Module',
+                  f'({s_to_ms(timer()-start, 5)}) executed inserts: {inserts}')
+
             cursor.execute(query)
-            # end = timer()
-            # print('finished executing query in',
-            #       s_to_ms(end-start, 5), 'ms')
 
-            data_return = cursor.fetchall()
+            log.i('Data Temp Manager Module',
+                  f'({s_to_ms(timer()-start, 5)}) executed query: {query}')
+
+            result = cursor.fetchall()
 
             if connection:
                 cursor.close()
                 connection.close()
 
-            return data_return
+            return result
         except (Exception):
             log.e('Data Temp Manager Module', sys.exc_info())
-            return ()
+            return None
 
     @staticmethod
-    def update_bc_in_rdb(request, query_update, query_select, data, entity):
+    def update_bc_in_rdb(request, query_update, query_select, data, entity) -> list[tuple] | None:
         """
         Receives bc data, insert it into rdb and updates the data
 
@@ -124,25 +112,23 @@ class DataTempManager:
         """
         config = Configuration.get_instance()
 
-        # It will be a new data to send to blockchain
-        data_return = None
+        start = timer()
 
-        # get list of unique columns among all given assets
         columns = Mapper.get_entity_columns(entity)
 
-        # generate CREATE TEMP TABLE statements
         create = Mapper.generate_sql_create_temp_table_from_columns(
             entity, columns, True)
-        print("prepared stmt:", ellipsize(create, 50))
+        if create:
+            log.i('Data Temp Manager Module',
+                  f'create: {create}')
 
-        # generate INSERT INTO TABLE statements
         insert = Mapper.generate_sql_insert_into_temp_table_from_bc_data(
             entity, columns, data, True)
         if insert:
-            print("prepared stmt:", ellipsize(insert, 50))
+            log.i('Data Temp Manager Module',
+                  f'query_update: {insert}')
 
         try:
-            # Creating connection
             driver = GenericDBDriver.get_instance()
             connection = driver.adapter.connect(
                 user=config.db_user,
@@ -154,58 +140,45 @@ class DataTempManager:
 
             cursor = connection.cursor()
 
-            # Creating the temp table
             if create:
-                start = timer()
                 cursor.execute(create)
-                end = timer()
-                print('finished executing creates in',
-                      s_to_ms(end-start, 5), 'ms')
+                log.i('Data Temp Manager Module',
+                      f'({s_to_ms(timer()-start, 5)}) executed create: {create}')
 
-            # Inserting into the temp table
             if insert:
-                start = timer()
                 cursor.execute(insert)
-                end = timer()
-                print('finished executing inserts in',
-                      s_to_ms(end-start, 5), 'ms')
+                log.i('Data Temp Manager Module',
+                      f'({s_to_ms(timer()-start, 5)}) executed insert: {insert}')
 
-            # executing the received query
-            start = timer()
-            print("executing stmt:", ellipsize(query_select, 50))
             cursor.execute(query_select)
-            end = timer()
-            print('finished executing stmt in',
-                  s_to_ms(end-start, 5), 'ms')
+
+            log.i('Data Temp Manager Module',
+                  f'({s_to_ms(timer()-start, 5)}) executed select: {query_select}')
 
             to_update = cursor.fetchall()
             if len(to_update) == 0:
-                return ()
+                return None
 
-            start = timer()
-            print("executing stmt:", ellipsize(query_update, 50))
             cursor.execute(query_update)
-            end = timer()
-            print('finished executing stmt in',
-                  s_to_ms(end-start, 5), 'ms')
+
+            log.i('Data Temp Manager Module',
+                  f'({s_to_ms(timer()-start, 5)}) executed update: {query_update}')
 
             query_select_updated = SQLAnalyzer('').generate_select_all_where_in(
                 entity, [add_single_quotes(x[0]) for x in to_update], DEFAULT_HASH)
 
-            start = timer()
-            print("executing stmt:", ellipsize(query_select_updated, 50))
             cursor.execute(query_select_updated)
-            end = timer()
-            print('finished executing stmt in',
-                  s_to_ms(end-start, 5), 'ms')
 
-            data_return = cursor.fetchall()
+            log.i('Data Temp Manager Module',
+                  f'({s_to_ms(timer()-start, 5)}) executed select updated: {query_select_updated}')
+
+            result = cursor.fetchall()
 
             if connection:
                 cursor.close()
                 connection.close()
 
-            return data_return
+            return result
         except (Exception):
             log.e('Data Temp Manager Module', sys.exc_info())
-            return ()
+            return None

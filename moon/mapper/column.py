@@ -40,7 +40,8 @@ class Column:
         """
         self.name = name
         self.type = type
-        self.insert_value_function = Column.insert_value_functions.get(type, lambda x: x)
+        self.insert_value_function = Column.insert_value_functions.get(
+            type, lambda x: x)
 
 
 class ColumnList(list):
@@ -70,9 +71,10 @@ class Attribute():
         return 'NULL' if self.value is None else str(self.column.insert_value_function(self.value))
 
 
-DEFAULT_ENTITY = "_entity"
-DEFAULT_HASH = "_hash"
-DEFAULT_PREVIOUS = "_previous"
-DEFAULT_STATUS = "_status"
+DEFAULT_ENTITY = "__entity"
+DEFAULT_HASH = "__hash"
+DEFAULT_PREVIOUS = "__previous"
+DEFAULT_STATUS = "__status"
 
-DEFAULT_OMITTED_COLUMNS = [DEFAULT_ENTITY, DEFAULT_HASH, DEFAULT_PREVIOUS, DEFAULT_STATUS]
+DEFAULT_OMITTED_COLUMNS = [DEFAULT_ENTITY,
+                           DEFAULT_HASH, DEFAULT_PREVIOUS, DEFAULT_STATUS]

@@ -17,7 +17,9 @@ class Communication:
             tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             tcp.bind((self.host, self.port))
             tcp.listen(1)
-            log.i('Communication Module', 'Server Started on {}:{}'.format(self.host, self.port))
+
+            log.i('Communication Module',
+                  f"Server Started on {self.host}:{self.port}")
 
             while True:
                 con, client = tcp.accept()
@@ -25,4 +27,5 @@ class Communication:
                 worker.start()
 
         except Exception as e:
-            log.e('Communication Module', sys.exc_info())
+            log.e('Communication Module', f"Error: {e}")
+            # sys.exit(1)
