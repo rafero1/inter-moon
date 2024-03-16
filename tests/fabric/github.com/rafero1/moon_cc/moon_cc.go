@@ -99,6 +99,9 @@ func getList(stub shim.ChaincodeStubInterface, args []string) (string, error) {
 		return "", fmt.Errorf("incorrect arguments. Expecting a list of keys. Got: %v", args)
 	}
 
+	// Need a faster way to get multiple keys
+	// Use GetStateByRange?
+
 	var result string
 	for i := 0; i < len(args); i++ {
 		value, err := stub.GetState(args[i])

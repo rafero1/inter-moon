@@ -164,6 +164,7 @@ class DataTempManager:
             log.i('Data Temp Manager Module',
                   f'({s_to_ms(timer()-start, 5)}) executed update: {query_update}')
 
+            # TODO: Verify if the update actually checks for changes before continuing
             query_select_updated = SQLAnalyzer('').generate_select_all_where_in(
                 entity, [add_single_quotes(x[0]) for x in to_update], DEFAULT_HASH)
 

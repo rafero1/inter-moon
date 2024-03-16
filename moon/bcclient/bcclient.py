@@ -105,7 +105,7 @@ class ClientBlockchain(Thread):
             start = timer()
             for item in data:
                 asset_id = str(uuid.uuid4())
-                tx = self.loop.run_until_complete(self.cli.chaincode_invoke(
+                bc_response = self.loop.run_until_complete(self.cli.chaincode_invoke(
                     requestor=self.requester,
                     channel_name=self.channel,
                     peers=[self.peers[0]],
@@ -114,6 +114,9 @@ class ClientBlockchain(Thread):
                     # transient_map=None,
                     # wait_for_event=True
                 ))
+
+                if bc_response is None or len(bc_response) == 0:
+                    raise Exception('Blockchain response is empty')
 
                 IndexManager.store_index(
                     entity,
@@ -147,7 +150,7 @@ class ClientBlockchain(Thread):
         # TODO: get using timestamps (before, after, between timestamps)
         self.cli.new_channel(self.channel)
 
-        assets = self.loop.run_until_complete(self.cli.chaincode_invoke(
+        bc_response = self.loop.run_until_complete(self.cli.chaincode_invoke(
             requestor=self.requester,
             channel_name=self.channel,
             peers=[self.peers[0]],
@@ -162,7 +165,12 @@ class ClientBlockchain(Thread):
             f"({s_to_ms(timer()-start, 5)} ms) retrieved assets from bc"
         )
 
-        assets = json.loads(assets)
+        if bc_response is None or len(bc_response) == 0:
+            return []
+
+        assets = json.loads(bc_response)
+        if isinstance(assets, dict):
+            assets = [assets]
 
         log.i(
             'Blockchain Client Module',
@@ -192,6 +200,11 @@ class ClientBlockchain(Thread):
             if SchemaManager.get_entity_db(entity) == BLOCKCHAIN:
                 bc_entities.append(entity)
                 bc_data.append(self._get_bc_data_by_entity(entity))
+
+        log.i(
+            'Blockchain Client Module',
+            f"bc_data: {bc_data}"
+        )
 
         return DataTempManager.select_with_conditionals_in_rdb(
             self.request,
