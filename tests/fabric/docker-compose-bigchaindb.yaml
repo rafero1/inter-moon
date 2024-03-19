@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  bigchaindb:
+    image: bigchaindb/bigchaindb:all-in-one
+    ports:
+      - "9984:9984"
+      - "9985:9985"
+    environment:
+      BIGCHAINDB_DATABASE_BACKEND: localmongodb
+      BIGCHAINDB_DATABASE_HOST: mongodb
+      BIGCHAINDB_DATABASE_PORT: 27017
+      BIGCHAINDB_DATABASE_NAME: bigchain
+      # BIGCHAINDB_SERVER_BIND:
+    # volumes:
+      # - ./bigchaindb-data:/data
+      # - ./bigchaindb-tendermint:/tendermint
