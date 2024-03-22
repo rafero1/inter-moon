@@ -1,14 +1,14 @@
 #!/bin/bash
 
+ITERATIONS=$1
+USER_ID=${2:-5}
 BASE_URL="http://localhost:9654"
 
 times=()
-# execute query many times
-ITERATIONS=$1
 for i in $(seq 1 $ITERATIONS)
 do
     start=$(date +%s%N)
-    curl -v -d "INSERT INTO user_files (user_id, file) VALUES ("$i", 'test.pdf')" "$BASE_URL"
+    curl -v -d "SELECT * FROM user_files WHERE user_id = "$USER_ID"" "$BASE_URL"
     end=$(date +%s%N)
     times+=($((end-start)))
 done
