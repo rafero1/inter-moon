@@ -6,22 +6,22 @@ from configuration.config import Configuration
 from sqlclient.generic_driver import GenericDBDriver
 
 
-class ClientSQL(Thread):
+class ClientSQL():
     def __init__(self, request):
         super().__init__()
 
         self.result = []
         self.request = request
 
-    def run(self):
+    async def run(self):
         if SELECT == self.request.q_type:
-            self.result = self._read_db()
+            self.result = await self._read_db()
         elif self.request.q_type in [DELETE, UPDATE, INSERT]:
-            self.result = self._write_db()
+            self.result = await self._write_db()
         else:
             raise Exception('Unrecognized Request Type')
 
-    def _write_db(self):
+    async def _write_db(self):
         """
         Executes write in relational database
         :return: number of affected rows
@@ -52,7 +52,7 @@ class ClientSQL(Thread):
         finally:
             return affected_rows
 
-    def _read_db(self):
+    async def _read_db(self):
         """
         execute select in relational database
         :return: list of data

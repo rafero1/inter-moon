@@ -11,7 +11,7 @@ from timeit import default_timer as timer
 class IndexManager:
 
     @staticmethod
-    def get_ids_by_entity(entity):
+    async def get_ids_by_entity(entity):
         """
         Gets the ID of each data of an
         entity that is on the Blockchain
@@ -35,8 +35,8 @@ class IndexManager:
         )
 
         sql_client = ClientSQL(request=req)
-        sql_client.start()
-        sql_client.join()
+        await sql_client.run()
+
         result = sql_client.get_result()
         list_assets_ids = []
 
@@ -50,7 +50,7 @@ class IndexManager:
         return list_assets_ids
 
     @staticmethod
-    def store_index(entity, bc_id, rbd_id):
+    async def store_index(entity, bc_id, rbd_id):
         """
         Stores an index entry for a newly recorded
         transaction on the blockchain
@@ -72,5 +72,4 @@ class IndexManager:
             db_user=config.db_user
         )
         sql_client = ClientSQL(request=req)
-        sql_client.start()
-        sql_client.join()
+        await sql_client.run()

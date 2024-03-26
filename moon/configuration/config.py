@@ -23,6 +23,8 @@ class Configuration:
     channel = None
     cc_name = None
 
+    debug_mode = None
+
 
     def __init__(self):
         if Configuration.__instance is not None:
@@ -56,3 +58,5 @@ class Configuration:
         self.peers = str(os.getenv('PEERS')).split(',')
         self.channel = os.getenv('CHANNEL')
         self.cc_name = os.getenv('CC_NAME')
+
+        self.debug_mode = os.getenv('DEBUG_MODE')

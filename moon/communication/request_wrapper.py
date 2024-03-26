@@ -1,4 +1,4 @@
-from threading import Event
+from asyncio import Event
 
 class RequestWrapper:
     def __init__(self, request):

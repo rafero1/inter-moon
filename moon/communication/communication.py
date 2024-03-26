@@ -3,29 +3,44 @@ import socket
 from logger import log
 from scheduler.scheduler import Scheduler
 from communication.communication_worker import Worker
-
+import asyncio
 
 class Communication:
     def __init__(self, host, port):
+        self.host = host
+        self.port = port
+        self.scheduler = Scheduler()
+
+    async def start(self):
         try:
-            self.host = host
-            self.port = port
+            log.i('Communication Module', 'Starting scheduler...')
+            self.scheduler_task = asyncio.create_task(self.scheduler.start())
 
-            scheduler = Scheduler()
-            scheduler.start()
+            log.i('Communication Module', f'Starting server on {self.host}:{self.port}...')
+            server = await asyncio.start_server(self.handle_client, self.host, self.port)
 
-            tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            tcp.bind((self.host, self.port))
-            tcp.listen(1)
+            async with server:
+                await server.serve_forever()
+        except Exception as e:
+            log.e('Communication Module', f'Error: {e}')
 
-            log.i('Communication Module',
-                  f"Server Started on {self.host}:{self.port}")
+    async def handle_client(self, reader, writer):
+        try:
+            data = await reader.read(1000)
+            log.i('Communication Module', f"Data received: {data}")
 
-            while True:
-                con, client = tcp.accept()
-                worker = Worker(con, client, scheduler)
-                worker.start()
+            worker = Worker(data, self.scheduler)
+            response = await worker.start()
+
+            response = response or ""
+            log.i('Communication Module', f"Response: {response}")
+
+            writer.write(response.encode())
+            await writer.drain()
 
         except Exception as e:
-            log.e('Communication Module', f"Error: {e}")
-            # sys.exit(1)
+            log.e('Communication Module', f'Error: {e}')
+
+        finally:
+            writer.close()
+            await writer.wait_closed()

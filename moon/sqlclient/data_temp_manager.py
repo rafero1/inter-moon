@@ -17,7 +17,7 @@ from sql_analyzer.sql_analyzer import SQLAnalyzer
 
 class DataTempManager:
     @staticmethod
-    def select_with_conditionals_in_rdb(request: Request, query: str, bc_data, bc_entities: typing.List[str], with_hash: bool = False) -> list[tuple] | None:
+    async def select_with_conditionals_in_rdb(request: Request, query: str, bc_data, bc_entities: typing.List[str], with_hash: bool = False) -> list[tuple] | None:
         """
         Executes a SELECT operation on the relational database using the given parameters
         and returns a tuple containing the results.
@@ -100,7 +100,7 @@ class DataTempManager:
             return None
 
     @staticmethod
-    def update_bc_in_rdb(request, query_update, query_select, data, entity) -> list[tuple] | None:
+    async def update_bc_in_rdb(request, query_update, query_select, data, entity) -> list[tuple] | None:
         """
         Receives bc data, insert it into rdb and updates the data
 

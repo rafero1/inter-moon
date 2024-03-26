@@ -25,16 +25,13 @@ class HTTPRequest(BaseHTTPRequestHandler):
         self.error_message = message
 
 
-class Worker(Thread):
+class Worker():
     id_workers = 0
     mutex = Lock()
 
-    def __init__(self, con: socket, client, scheduler: Scheduler):
-        Thread.__init__(self)
-
+    def __init__(self, data, scheduler: Scheduler):
         self.id = self.get_id_worker()
-        self.con = con
-        self.client = client
+        self.data = data
         self.scheduler = scheduler
 
         log.i(
@@ -53,7 +50,7 @@ class Worker(Thread):
         Worker.mutex.release()
         return Worker.id_workers
 
-    def handle_request(self, request_body):
+    async def handle_request(self, request_body):
         log.i(
             f"Communication Module - Worker {self.id}",
             f"Request received: {request_body}"
@@ -66,10 +63,10 @@ class Worker(Thread):
         request_wrapper = RequestWrapper(request_body)
 
         # Sending to the scheduler
-        self.scheduler.enqueue_transaction(request_wrapper)
+        await self.scheduler.enqueue_transaction(request_wrapper)
 
         # Waiting for response ready
-        request_wrapper.ready.wait()
+        await request_wrapper.ready.wait()
 
         # Getting the response from wrapper
         response_body = str(request_wrapper.result)
@@ -78,18 +75,13 @@ class Worker(Thread):
 
         return response
 
-    def run(self):
+    async def start(self):
         """
         Receives transactions from the clients
         and enqueue it using the scheduler module
         """
 
-        log.i(
-            f"Communication Module - Worker {self.id}",
-            f"New Connection: {self.client}"
-        )
-
-        request_text = self.con.recv(1024).strip().decode('utf-8')
+        request_text = self.data.decode('utf-8')
         request = HTTPRequest(request_text)
 
         if request.error_code:
@@ -97,29 +89,17 @@ class Worker(Thread):
                 f"Communication Module - Worker {self.id}",
                 f"Error: {request.error_code} {request.error_message}"
             )
-            return
+            return "HTTP/1.1 400 Bad Request\r\n\r\n" + str(request.error_message)
 
         if not request.headers['Content-Length']:
             log.e(
                 f"Communication Module - Worker {self.id}",
                 'Error: Content-Length not found'
             )
-            return
+            return "HTTP/1.1 400 Bad Request\r\n\r\nMissing Content-Length header"
 
         body = request.rfile.read(
             int(request.headers['Content-Length'])).decode('utf-8')
-        response = self.handle_request(body)
+        response = await self.handle_request(body)
 
-        self.con.send(response.encode('utf-8'))
-
-        log.i(
-            f"Communication Module - Worker {self.id}",
-            f"Response sent: {response}"
-        )
-
-        # The client sent END_COMMUNICATION
-        self.con.close()
-        log.i(
-            f"Communication Module - Worker {self.id}",
-            'Connection Closed'
-        )
+        return response

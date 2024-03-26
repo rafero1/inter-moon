@@ -33,7 +33,7 @@ import json
 load_dotenv(find_dotenv())
 
 
-class ClientBlockchain(Thread):
+class ClientBlockchain():
     network_profile_path = os.getenv(
         'NETWORK_PROFILE', 'test/fixtures/network.json')
 
@@ -42,9 +42,6 @@ class ClientBlockchain(Thread):
         self.result = None
         self.request = request
 
-        self.loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(self.loop)
-
         self.cli = Client(net_profile=Path(self.network_profile_path))
         self.requester = self.cli.get_user(
             org_name='org1.example.com', name='Admin')
@@ -52,10 +49,10 @@ class ClientBlockchain(Thread):
         self.channel = 'businesschannel'
         self.cc_name = 'moon_cc'
 
-    def run(self):
+    async def run(self):
         if SELECT == self.request.q_type:
             start = timer()
-            self.result = self._select_blockchain()
+            self.result = await self._select_blockchain()
             end = timer()
             log.i(
                 'Blockchain Client Module',
@@ -64,7 +61,7 @@ class ClientBlockchain(Thread):
 
         elif INSERT == self.request.q_type:
             start = timer()
-            self.result = self._insert_blockchain()
+            self.result = await self._insert_blockchain()
             end = timer()
             log.i(
                 'Blockchain Client Module',
@@ -73,7 +70,7 @@ class ClientBlockchain(Thread):
 
         elif UPDATE == self.request.q_type:
             start = timer()
-            self.result = self._update_blockchain()
+            self.result = await self._update_blockchain()
             end = timer()
             log.i(
                 'Blockchain Client Module',
@@ -82,7 +79,7 @@ class ClientBlockchain(Thread):
 
         elif DELETE == self.request.q_type:
             start = timer()
-            self.result = self._delete_blockchain()
+            self.result = await self._delete_blockchain()
             end = timer()
             log.i(
                 'Blockchain Client Module',
@@ -91,7 +88,7 @@ class ClientBlockchain(Thread):
         else:
             raise Exception('Unrecognized Request Type')
 
-    def _write_to_bc(self, data: list[dict], entity: str) -> int:
+    async def _write_to_bc(self, data: list[dict], entity: str) -> int:
         """
         Stores data on Blockchain and its index on the index table
         :param data: List of dicts with data to be stored
@@ -105,7 +102,7 @@ class ClientBlockchain(Thread):
             start = timer()
             for item in data:
                 asset_id = str(uuid.uuid4())
-                bc_response = self.loop.run_until_complete(self.cli.chaincode_invoke(
+                bc_response = await self.cli.chaincode_invoke(
                     requestor=self.requester,
                     channel_name=self.channel,
                     peers=[self.peers[0]],
@@ -113,12 +110,12 @@ class ClientBlockchain(Thread):
                     cc_name=self.cc_name,
                     # transient_map=None,
                     # wait_for_event=True
-                ))
+                )
 
                 if bc_response is None or len(bc_response) == 0:
                     raise Exception('Blockchain response is empty')
 
-                IndexManager.store_index(
+                await IndexManager.store_index(
                     entity,
                     asset_id,
                     item[SchemaManager.get_primary_key_by_entity(entity)]
@@ -137,7 +134,7 @@ class ClientBlockchain(Thread):
             return 0
         return len(data)
 
-    def _get_bc_data(self, *hash_list) -> list[dict]:
+    async def _get_bc_data(self, *hash_list) -> list[dict]:
         start = timer()
 
         log.i(
@@ -150,7 +147,7 @@ class ClientBlockchain(Thread):
         # TODO: get using timestamps (before, after, between timestamps)
         self.cli.new_channel(self.channel)
 
-        bc_response = self.loop.run_until_complete(self.cli.chaincode_invoke(
+        bc_response = await self.cli.chaincode_invoke(
             requestor=self.requester,
             channel_name=self.channel,
             peers=[self.peers[0]],
@@ -158,7 +155,7 @@ class ClientBlockchain(Thread):
             cc_name=self.cc_name,
             # transient_map=None,
             # wait_for_event=True
-        ))
+        )
 
         log.i(
             'Blockchain Client Module',
@@ -179,14 +176,14 @@ class ClientBlockchain(Thread):
 
         return assets
 
-    def _get_bc_data_by_entity(self, *entities) -> list[dict]:
-        entity_hashes = [IndexManager.get_ids_by_entity(
+    async def _get_bc_data_by_entity(self, *entities) -> list[dict]:
+        entity_hashes = [await IndexManager.get_ids_by_entity(
             entity) for entity in entities]
         bc_hashes = pydash.flatten(entity_hashes)
 
-        return self._get_bc_data(*bc_hashes)
+        return await self._get_bc_data(*bc_hashes)
 
-    def _select_blockchain(self):
+    async def _select_blockchain(self):
         """
         Executes a SELECT query for blockchain assets.
         Creates a temp table using the requested entities, executes the SELECT there and returns results.
@@ -199,14 +196,14 @@ class ClientBlockchain(Thread):
         for entity in self.request.q_entities:
             if SchemaManager.get_entity_db(entity) == BLOCKCHAIN:
                 bc_entities.append(entity)
-                bc_data.append(self._get_bc_data_by_entity(entity))
+                bc_data.append(await self._get_bc_data_by_entity(entity))
 
         log.i(
             'Blockchain Client Module',
             f"bc_data: {bc_data}"
         )
 
-        return DataTempManager.select_with_conditionals_in_rdb(
+        return await DataTempManager.select_with_conditionals_in_rdb(
             self.request,
             self.request.q_query,
             bc_data,
@@ -224,7 +221,7 @@ class ClientBlockchain(Thread):
 
         return self._write_to_bc(data_transaction, self.request.q_entities[0])
 
-    def _update_blockchain(self):
+    async def _update_blockchain(self):
         """
         Executes an UPDATE query for blockchain assets.
 
@@ -236,9 +233,9 @@ class ClientBlockchain(Thread):
         """
         config = Configuration.get_instance()
 
-        hash_list = IndexManager.get_ids_by_entity(self.request.q_entities[0])
+        hash_list = await IndexManager.get_ids_by_entity(self.request.q_entities[0])
 
-        bc_data = self._get_bc_data(*hash_list)
+        bc_data = await self._get_bc_data(*hash_list)
         if bc_data is None or len(bc_data) == 0:
             return 0
 
@@ -257,7 +254,7 @@ class ClientBlockchain(Thread):
         for i, asset in enumerate(bc_data):
             asset[DEFAULT_HASH] = hash_list[i]
 
-        updated_asset_tuples = DataTempManager.update_bc_in_rdb(
+        updated_asset_tuples = await DataTempManager.update_bc_in_rdb(
             self.request,
             self.request.q_query,
             query_select,
@@ -293,7 +290,7 @@ class ClientBlockchain(Thread):
               f"new_assets_to_append: {new_assets}")
 
         # Save the new assets
-        status = self._write_to_bc(
+        status = await self._write_to_bc(
             new_assets,
             self.request.q_entities[0]
         )
@@ -323,8 +320,7 @@ class ClientBlockchain(Thread):
             )
 
             client_sql = ClientSQL(request_delete_index_entries)
-            client_sql.start()
-            client_sql.join()
+            await client_sql.run()
             result = client_sql.get_result()
 
             log.i('Blockchain Client Module',
@@ -333,7 +329,7 @@ class ClientBlockchain(Thread):
             return result
         return 0
 
-    def _delete_blockchain(self):
+    async def _delete_blockchain(self):
         """
         Executes a DELETE query for blockchain assets.
 
@@ -345,9 +341,9 @@ class ClientBlockchain(Thread):
         """
         config = Configuration.get_instance()
 
-        hash_list = IndexManager.get_ids_by_entity(self.request.q_entities[0])
+        hash_list = await IndexManager.get_ids_by_entity(self.request.q_entities[0])
 
-        bc_data = self._get_bc_data(*hash_list)
+        bc_data = await self._get_bc_data(*hash_list)
         if bc_data is None or len(bc_data) == 0:
             return 0
 
@@ -362,7 +358,7 @@ class ClientBlockchain(Thread):
 
         log.i('Blockchain Client Module', f"query: {query}")
 
-        bc_hash_list = DataTempManager.select_with_conditionals_in_rdb(
+        bc_hash_list = await DataTempManager.select_with_conditionals_in_rdb(
             self.request,
             query,
             [bc_data],
@@ -398,8 +394,7 @@ class ClientBlockchain(Thread):
         )
 
         client_sql = ClientSQL(request_delete_index)
-        client_sql.start()
-        client_sql.join()
+        await client_sql.run()
         result = client_sql.get_result()
 
         log.i('Blockchain Client Module',
